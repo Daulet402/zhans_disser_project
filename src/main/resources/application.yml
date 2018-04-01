@@ -1,0 +1,6 @@
+server:
+  port: 7373
+
+spring:
+  profiles:
+    active: prod
