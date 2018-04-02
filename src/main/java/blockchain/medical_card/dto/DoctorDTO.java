@@ -12,7 +12,6 @@ import lombok.ToString;
 public class DoctorDTO extends AbstractPerson {
 	private String username;
 	private String email;
-	private Long hospitalId;
 	private String passwordHash;
 	private String password;
 }

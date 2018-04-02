@@ -103,7 +103,7 @@ public class RegistrationController extends AbstractRegistrationController {
 			Alert alert = FxUtils.getAlertWindow(
 					propertiesConfig.getErrorMessage(),
 					null,
-					propertiesConfig.getDoctorExistsMessage(),
+					propertiesConfig.getExistsMessage(),
 					Alert.AlertType.ERROR);
 			alert.showAndWait();
 			return;
@@ -121,6 +121,14 @@ public class RegistrationController extends AbstractRegistrationController {
 
 	public void cleanFields() {
 		super.cleanFields();
-		FxUtils.clean(firstName, lastName, middleName, iin, address, username, email);
+		FxUtils.clean(
+				firstName,
+				lastName,
+				middleName,
+				iin,
+				address,
+				username,
+				email
+		);
 	}
 }

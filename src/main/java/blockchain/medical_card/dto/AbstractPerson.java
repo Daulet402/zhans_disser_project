@@ -12,5 +12,6 @@ public abstract class AbstractPerson {
 	private String lastName;
 	private String middleName;
 	private String iin;
+	private Long hospitalId;
 	private AddressDTO address;
 }

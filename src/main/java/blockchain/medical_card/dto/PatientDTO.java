@@ -9,8 +9,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class PatientDTO extends AbstractPerson {
 	private String bloodType;
-	private String height;
-	private String weight;
+	private Double height;
+	private Double weight;
 	private String phoneNumber;
 	private String workPlace;
 }

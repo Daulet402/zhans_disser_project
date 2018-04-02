@@ -17,11 +17,15 @@ public class PropertiesConfig {
 	@Value("${app.data.files.doctors.file}")
 	private String doctorsFileName;
 
+	@Value("${app.data.files.patients.file}")
+	private String patientsFileName;
+
 	//@Value("${error}")
 	private String errorMessage = "Ошибка";
 
 	//@Value("${doctor.exists}")
-	private String doctorExistsMessage = "Врач существует";
+	private String existsMessage = "Запись уже существует";
+	private String incorrectInputMessage = "Проверьте входные данные";
 
 	//@Value("${doctor.exists}")
 	private String doctorNotFoundMessage = "Не верные данные";
