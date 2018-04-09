@@ -6,12 +6,15 @@
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TreeView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="759.0" prefWidth="1170.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="blockchain.medical_card.services.fx.PatientsController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="759.0" prefWidth="1170.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="blockchain.medical_card.fx.controllers.PatientsController">
    <top>
       <VBox BorderPane.alignment="CENTER">
          <children>
@@ -24,68 +27,88 @@
                   </Label>
                </children>
             </HBox>
-            <Button mnemonicParsing="false" onAction="#addPatient" text="Добавить пациента">
-               <VBox.margin>
-                  <Insets bottom="5.0" left="5.0" />
-               </VBox.margin></Button>
          </children>
       </VBox>
    </top>
    <left>
-      <TreeView fx:id="patientsTree" prefHeight="702.0" prefWidth="237.0" BorderPane.alignment="CENTER" />
+      <TreeView id="allPatients" fx:id="patientsTree" prefHeight="702.0" prefWidth="237.0" BorderPane.alignment="CENTER" />
    </left>
    <center>
       <VBox prefHeight="529.0" prefWidth="561.0" BorderPane.alignment="CENTER">
          <children>
-            <HBox alignment="CENTER" spacing="10.0">
+            <HBox>
                <children>
-                  <Label text="ФИО:" />
-                  <Label fx:id="fio" text="Айбеков Асыл Жуманович" />
+                  <VBox>
+                     <children>
+                        <HBox alignment="CENTER_LEFT" spacing="10.0">
+                           <children>
+                              <Label text="ФИО:" />
+                              <Label fx:id="fio" text="" />
+                           </children>
+                        </HBox>
+                        <HBox alignment="CENTER_LEFT" spacing="10.0">
+                           <children>
+                              <Label text="Адрес:">
+                                 <HBox.margin>
+                                    <Insets />
+                                 </HBox.margin>
+                              </Label>
+                              <Label id="address" fx:id="address" text="г.Алматы, ул. Абая д.47" />
+                           </children>
+                        </HBox>
+                        <HBox alignment="CENTER_LEFT" spacing="10.0">
+                           <children>
+                              <Label text="ИИН:" />
+                              <Label id="iin" fx:id="iin" text="+770145841234" />
+                           </children>
+                        </HBox>
+                        <HBox alignment="CENTER_LEFT" spacing="10.0">
+                           <children>
+                              <Label text="Телефон:" />
+                              <Label id="phoneNumber" fx:id="phoneNumber" text="+770145841234" />
+                           </children>
+                        </HBox>
+                        <HBox alignment="CENTER_LEFT" spacing="10.0">
+                           <children>
+                              <Label text="Рост" />
+                              <Label id="height" fx:id="height" text="+770145841234" />
+                           </children>
+                        </HBox>
+                        <HBox alignment="CENTER_LEFT" spacing="10.0">
+                           <children>
+                              <Label text="Вес" />
+                              <Label id="weight" fx:id="weight" text="+770145841234" />
+                           </children>
+                        </HBox>
+                        <HBox alignment="CENTER_LEFT" spacing="10.0">
+                           <children>
+                              <Label text="Группа крови" />
+                              <Label id="bloodType" fx:id="bloodType" text="+770145841234" />
+                           </children>
+                        </HBox>
+                        <HBox alignment="CENTER_LEFT" spacing="10.0">
+                           <children>
+                              <Label text="Место работы" />
+                              <Label id="workPlace" fx:id="workPlace" text="+770145841234" />
+                           </children>
+                        </HBox>
+                     </children>
+                     <HBox.margin>
+                        <Insets left="10.0" top="2.0" />
+                     </HBox.margin>
+                  </VBox>
+                  <Region prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
+                  <ImageView id="image" fitHeight="199.0" fitWidth="260.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@/images/Generic_Avatar.png" />
+                     </image>
+                     <HBox.margin>
+                        <Insets right="10.0" />
+                     </HBox.margin>
+                  </ImageView>
                </children>
             </HBox>
-            <HBox alignment="CENTER" spacing="10.0">
-               <children>
-                  <Label text="Адрес:" />
-                  <Label fx:id="address" text="г.Алматы, ул. Абая д.47" />
-               </children>
-            </HBox>
-            <HBox alignment="CENTER" spacing="10.0">
-               <children>
-                  <Label text="ИИН:" />
-                  <Label fx:id="iin" text="+770145841234" />
-               </children>
-            </HBox>
-            <HBox alignment="CENTER" spacing="10.0">
-               <children>
-                  <Label text="Телефон:" />
-                  <Label fx:id="phoneNumber" text="+770145841234" />
-               </children>
-            </HBox>
-            <HBox alignment="CENTER" spacing="10.0">
-               <children>
-                  <Label text="Рост" />
-                  <Label fx:id="height" text="+770145841234" />
-               </children>
-            </HBox>
-            <HBox alignment="CENTER" spacing="10.0">
-               <children>
-                  <Label text="Вес" />
-                  <Label fx:id="weight" text="+770145841234" />
-               </children>
-            </HBox>
-            <HBox alignment="CENTER" spacing="10.0">
-               <children>
-                  <Label text="Группа крови" />
-                  <Label fx:id="bloodType" text="+770145841234" />
-               </children>
-            </HBox>
-            <HBox alignment="CENTER" spacing="10.0">
-               <children>
-                  <Label text="Место работы" />
-                  <Label fx:id="workPlace" text="+770145841234" />
-               </children>
-            </HBox>
-            <TableView fx:id="recordsTable" prefHeight="293.0" prefWidth="594.0">
+            <TableView id="illnessRecords" fx:id="recordsTable" prefHeight="293.0" prefWidth="594.0">
               <columns>
                 <TableColumn prefWidth="118.0" text="Время записи" />
                 <TableColumn prefWidth="215.0" text="Врач" />
@@ -99,8 +122,14 @@
             </TableView>
             <HBox prefHeight="100.0" prefWidth="200.0" spacing="10.0">
                <children>
-                  <Button mnemonicParsing="false" onAction="#addRecord" text="Добавить запись" />
-                  <Button disable="true" mnemonicParsing="false" text="Детально" />
+                  <Button disable="true" fx:id="addRecordButton" mnemonicParsing="false" onAction="#addRecord" text="Добавить запись" />
+                  <Button disable="true" fx:id="detailButton" mnemonicParsing="false" onAction="#seeInDetail" text="Детально" />
+                  <Region prefHeight="100.0" prefWidth="547.0" HBox.hgrow="ALWAYS" />
+                  <Button mnemonicParsing="false" onAction="#addPatient" text="Добавить пациента">
+                     <HBox.margin>
+                        <Insets right="10.0" />
+                     </HBox.margin>
+                  </Button>
                </children>
                <VBox.margin>
                   <Insets left="5.0" top="10.0" />

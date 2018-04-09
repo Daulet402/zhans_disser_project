@@ -11,14 +11,14 @@
 <?import javafx.scene.layout.VBox?>
 
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="859.0" prefWidth="1454.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="blockchain.medical_card.services.fx.IllnessRecordController">
+            fx:controller="blockchain.medical_card.fx.controllers.IllnessRecordController">
    <top>
       <VBox BorderPane.alignment="CENTER">
          <children>
             <HBox alignment="CENTER" prefHeight="17.0" prefWidth="230.0" spacing="10.0">
                <children>
                   <Label prefHeight="17.0" prefWidth="93.0" text="Пациент" />
-                  <Label prefHeight="17.0" prefWidth="199.0" text="Иванов Иван Иванович">
+                  <Label prefHeight="17.0" fx:id="patientFio" prefWidth="199.0" text="">
                      <HBox.margin>
                         <Insets />
                      </HBox.margin></Label>
@@ -33,7 +33,7 @@
             <HBox alignment="CENTER" prefHeight="17.0" prefWidth="230.0" spacing="10.0">
                <children>
                   <Label prefHeight="17.0" prefWidth="93.0" text="Врач" />
-                  <Label prefHeight="17.0" prefWidth="199.0" text="Доктор Айболит">
+                  <Label prefHeight="17.0" fx:id="doctorFio" prefWidth="199.0" text="">
                      <HBox.margin>
                         <Insets />
                      </HBox.margin></Label>
@@ -133,7 +133,7 @@
                <children>
                   <Region HBox.hgrow="NEVER" />
                   <Button mnemonicParsing="false" onAction="#addIllnessRecord" text="Сохранить" />
-                  <Button mnemonicParsing="false" onAction="#cancel" text="Отмена" />
+                  <Button mnemonicParsing="false" onAction="#back" text="Отмена" />
                </children>
                <opaqueInsets>
                   <Insets />

@@ -1,6 +1,6 @@
 package blockchain.medical_card.services.dao;
 
-import blockchain.medical_card.api.CityDaoService;
+import blockchain.medical_card.api.dao.CityDaoService;
 import blockchain.medical_card.dto.info.CityDTO;
 import blockchain.medical_card.dto.mapper.CityResultSetExtractor;
 import org.springframework.beans.factory.annotation.Autowired;

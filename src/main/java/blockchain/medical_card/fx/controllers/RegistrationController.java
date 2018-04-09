@@ -1,6 +1,6 @@
-package blockchain.medical_card.services.fx;
+package blockchain.medical_card.fx.controllers;
 
-import blockchain.medical_card.api.CityDaoService;
+import blockchain.medical_card.api.dao.CityDaoService;
 import blockchain.medical_card.api.FileService;
 import blockchain.medical_card.configuration.ControllersConfiguration;
 import blockchain.medical_card.configuration.PropertiesConfig;

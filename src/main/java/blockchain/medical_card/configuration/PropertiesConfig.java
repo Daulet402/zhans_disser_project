@@ -31,4 +31,10 @@ public class PropertiesConfig {
 	private String doctorNotFoundMessage = "Не верные данные";
 
 	private String loggedInUsernameTextPattern = "Вы зашли под именем %s";
+
+	private String patientNotFoundMessage = "Пациент не найден";
+
+	private String notSavedMessage = "Данные не сохранены";
+
+	private String savedMessage = "Данные сохранены";
 }

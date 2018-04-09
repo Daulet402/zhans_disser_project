@@ -2,6 +2,7 @@ package blockchain.medical_card.utils;
 
 import java.security.*;
 import java.util.Base64;
+import java.util.UUID;
 
 public class AlgorithmUtils {
 	public static String applySha256(String input) {
@@ -49,6 +50,10 @@ public class AlgorithmUtils {
 
 	public static String getStringFromKey(Key key) {
 		return Base64.getEncoder().encodeToString(key.getEncoded());
+	}
+
+	public static String getUniqKey() {
+		return UUID.randomUUID().toString();
 	}
 }
 

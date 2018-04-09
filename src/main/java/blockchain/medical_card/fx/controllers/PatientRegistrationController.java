@@ -1,6 +1,6 @@
-package blockchain.medical_card.services.fx;
+package blockchain.medical_card.fx.controllers;
 
-import blockchain.medical_card.api.CityDaoService;
+import blockchain.medical_card.api.dao.CityDaoService;
 import blockchain.medical_card.api.FileService;
 import blockchain.medical_card.configuration.ControllersConfiguration;
 import blockchain.medical_card.configuration.PropertiesConfig;
@@ -8,6 +8,7 @@ import blockchain.medical_card.dto.AddressDTO;
 import blockchain.medical_card.dto.PatientDTO;
 import blockchain.medical_card.dto.exceptions.BlockchainAppException;
 import blockchain.medical_card.dto.info.CityDTO;
+import blockchain.medical_card.utils.AlgorithmUtils;
 import blockchain.medical_card.utils.FxUtils;
 import blockchain.medical_card.utils.JsonUtils;
 import com.google.gson.reflect.TypeToken;
@@ -78,6 +79,7 @@ public class PatientRegistrationController extends AbstractRegistrationControlle
 
 	public void registerPatient(ActionEvent actionEvent) throws BlockchainAppException {
 		PatientDTO patientDTO = new PatientDTO();
+		patientDTO.setId(AlgorithmUtils.getUniqKey());
 		patientDTO.setFirstName(patientFirstName.getText());
 		patientDTO.setLastName(patientLastName.getText());
 		patientDTO.setMiddleName(patientMiddleName.getText());
