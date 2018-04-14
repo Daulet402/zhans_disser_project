@@ -16,4 +16,8 @@ public abstract class AbstractPerson implements Serializable{
 	private String iin;
 	private Long hospitalId;
 	private AddressDTO address;
+
+	public String getFullName() {
+		return String.format("%s %s %s", lastName, firstName, middleName);
+	}
 }

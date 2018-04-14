@@ -1,29 +1,21 @@
 package blockchain.medical_card.fx.controllers;
 
-import blockchain.medical_card.api.dao.CityDaoService;
 import blockchain.medical_card.api.FileService;
+import blockchain.medical_card.api.fx.PatientRegistrationService;
 import blockchain.medical_card.configuration.ControllersConfiguration;
 import blockchain.medical_card.configuration.PropertiesConfig;
-import blockchain.medical_card.dto.AddressDTO;
-import blockchain.medical_card.dto.PatientDTO;
-import blockchain.medical_card.dto.exceptions.BlockchainAppException;
+import blockchain.medical_card.dto.exceptions.BlockChainAppException;
+import blockchain.medical_card.dto.exceptions.BlockChainCodeException;
 import blockchain.medical_card.dto.info.CityDTO;
-import blockchain.medical_card.utils.AlgorithmUtils;
 import blockchain.medical_card.utils.FxUtils;
-import blockchain.medical_card.utils.JsonUtils;
-import com.google.gson.reflect.TypeToken;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
 import lombok.Data;
-import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
-import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -34,10 +26,10 @@ public class PatientRegistrationController extends AbstractRegistrationControlle
 	private ControllersConfiguration.ViewHolder patientsViewHolder;
 
 	@Autowired
-	private CityDaoService cityDaoService;
+	private PropertiesConfig propertiesConfig;
 
 	@Autowired
-	private PropertiesConfig propertiesConfig;
+	private PatientRegistrationService patientRegistrationService;
 
 	@Autowired
 	private FileService fileService;
@@ -74,28 +66,16 @@ public class PatientRegistrationController extends AbstractRegistrationControlle
 
 	@Override
 	protected List<CityDTO> getAllCities() {
-		return cityDaoService.getAllCities();
+		return patientRegistrationService.getAllCities();
 	}
 
-	public void registerPatient(ActionEvent actionEvent) throws BlockchainAppException {
-		PatientDTO patientDTO = new PatientDTO();
-		patientDTO.setId(AlgorithmUtils.getUniqKey());
-		patientDTO.setFirstName(patientFirstName.getText());
-		patientDTO.setLastName(patientLastName.getText());
-		patientDTO.setMiddleName(patientMiddleName.getText());
-		patientDTO.setIin(patientIIN.getText());
-		patientDTO.setBloodType(patientBloodType.getText());
-		patientDTO.setPhoneNumber(patientPhoneNumber.getText());
-		patientDTO.setWorkPlace(workPlace.getText());
-		patientDTO.setHospitalId(hospital.getValue() != null ? hospital.getValue().getHospitalId() : null);
-		patientDTO.setAddress(new AddressDTO(
-				city.getValue() != null ? city.getValue().getCityId() : null,
-				district.getValue() != null ? district.getValue().getDistrictId() : null,
-				patientAddress.getText()));
+	public void registerPatient(ActionEvent actionEvent) throws BlockChainAppException {
+		Double height = null;
+		Double weight = null;
 
 		try {
-			patientDTO.setHeight(Double.parseDouble(patientHeight.getText()));
-			patientDTO.setWeight(Double.parseDouble(patientWeight.getText()));
+			height = Double.parseDouble(patientHeight.getText());
+			weight = Double.parseDouble(patientWeight.getText());
 		} catch (NumberFormatException e) {
 			e.printStackTrace();
 			Alert alert = FxUtils.getAlertWindow(
@@ -107,43 +87,53 @@ public class PatientRegistrationController extends AbstractRegistrationControlle
 			return;
 		}
 
-		String fileName = propertiesConfig
-				.getFilesLocation()
-				.concat(File.separator)
-				.concat(propertiesConfig.getPatientsFileName());
+		try {
+			patientRegistrationService.registerPatient(
+					patientFirstName.getText(),
+					patientLastName.getText(),
+					patientMiddleName.getText(),
+					patientIIN.getText(),
+					patientBloodType.getText(),
+					patientPhoneNumber.getText(),
+					workPlace.getText(),
+					hospital.getValue() != null ? hospital.getValue().getHospitalId() : null,
+					city.getValue() != null ? city.getValue().getCityId() : null,
+					district.getValue() != null ? district.getValue().getDistrictId() : null,
+					patientAddress.getText(),
+					height,
+					weight);
 
-		List<PatientDTO> patientDTOs = JsonUtils
-				.getGson()
-				.fromJson(fileService.readFromFile(fileName), new TypeToken<List<PatientDTO>>() {
-				}.getType());
-
-		if (CollectionUtils.isEmpty(patientDTOs))
-			patientDTOs = new ArrayList<>();
-
-		boolean patientExists = patientDTOs.stream().anyMatch(p ->
-				StringUtils.equalsIgnoreCase(p.getFirstName(), patientDTO.getFirstName())
-						&& StringUtils.equalsIgnoreCase(p.getLastName(), patientDTO.getLastName())
-						&& StringUtils.equalsIgnoreCase(p.getMiddleName(), patientDTO.getMiddleName())
-						&& StringUtils.equalsIgnoreCase(p.getIin(), patientDTO.getIin())
-						&& StringUtils.equals(p.getIin(), patientDTO.getIin()));
-
-		if (patientExists) {
+			Alert alert = FxUtils.getAlertWindow(null, null, propertiesConfig.getSavedMessage(), Alert.AlertType.INFORMATION);
+			alert.showAndWait();
+			back(actionEvent);
+		} catch (BlockChainCodeException e) {
+			e.printStackTrace();
+			if (e.getExceptionCode() == BlockChainCodeException.ExceptionCode.PATIENT_ALREADY_EXISTS) {
+				Alert alert = FxUtils.getAlertWindow(
+						propertiesConfig.getErrorMessage(),
+						null,
+						propertiesConfig.getExistsMessage(),
+						Alert.AlertType.ERROR);
+				alert.showAndWait();
+			}
+		} catch (BlockChainAppException e) {
+			e.printStackTrace();
 			Alert alert = FxUtils.getAlertWindow(
 					propertiesConfig.getErrorMessage(),
 					null,
-					propertiesConfig.getExistsMessage(),
+					"",
 					Alert.AlertType.ERROR);
 			alert.showAndWait();
-			return;
 		}
-
-		patientDTOs.add(patientDTO);
-		fileService.writeToFile(fileName, JsonUtils.toJson(patientDTOs));
-		back(actionEvent);
 	}
 
 	public void back(ActionEvent actionEvent) {
 		FxUtils.setScene(actionEvent, patientsViewHolder);
+		try {
+			((PatientsController) patientsViewHolder.getController()).initAllData();
+		} catch (BlockChainAppException e) {
+			e.printStackTrace();
+		}
 		cleanFields();
 	}
 

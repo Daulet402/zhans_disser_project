@@ -1,7 +1,7 @@
 package blockchain.medical_card.services;
 
 import blockchain.medical_card.api.FileService;
-import blockchain.medical_card.dto.exceptions.BlockchainAppException;
+import blockchain.medical_card.dto.exceptions.BlockChainAppException;
 import blockchain.medical_card.dto.exceptions.FileException;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
@@ -12,7 +12,7 @@ import java.io.*;
 public class FileServiceImpl implements FileService {
 
 	@Override
-	public void writeToFile(String fileName, String json) throws BlockchainAppException {
+	public void writeToFile(String fileName, String json) throws BlockChainAppException {
 		if (StringUtils.isAnyBlank(fileName, json))
 			throw new IllegalArgumentException("Mandatory parameter missed");
 
@@ -26,7 +26,7 @@ public class FileServiceImpl implements FileService {
 	}
 
 	@Override
-	public String readFromFile(String fileName) throws BlockchainAppException {
+	public String readFromFile(String fileName) throws BlockChainAppException {
 		if (StringUtils.isAnyBlank(fileName))
 			throw new IllegalArgumentException("Mandatory parameter missed");
 

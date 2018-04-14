@@ -41,7 +41,7 @@ public class MedicalApp extends AbstractJavaFxApplicationSupport {
 		//startSceneByName(patientRegisterViewHolder.getName(), patientRegisterViewHolder.getView());
 		//startSceneByName(illnessRecordViewHolder.getName(), illnessRecordViewHolder.getView());
 		//startSceneByName(patientsViewHolder.getName(), patientsViewHolder.getView());
-		startSceneByName(patientRegisterViewHolder.getName(), patientRegisterViewHolder.getView());
+		startSceneByName(loginViewHolder.getName(), loginViewHolder.getView());
 	}
 
 	public void startSceneByName(String sceneName, Parent parent) throws Exception {

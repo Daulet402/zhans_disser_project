@@ -10,6 +10,7 @@ import lombok.ToString;
 @ToString(callSuper = true)
 @Data
 public class DoctorDTO extends AbstractPerson {
+	private String id;
 	private String username;
 	private String email;
 	private String passwordHash;

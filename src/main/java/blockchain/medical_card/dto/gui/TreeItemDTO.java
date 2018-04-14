@@ -1,4 +1,4 @@
-package blockchain.medical_card.dto;
+package blockchain.medical_card.dto.gui;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

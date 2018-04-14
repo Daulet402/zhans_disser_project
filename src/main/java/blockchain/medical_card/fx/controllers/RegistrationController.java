@@ -1,28 +1,19 @@
 package blockchain.medical_card.fx.controllers;
 
-import blockchain.medical_card.api.dao.CityDaoService;
-import blockchain.medical_card.api.FileService;
+import blockchain.medical_card.api.fx.RegistrationService;
 import blockchain.medical_card.configuration.ControllersConfiguration;
 import blockchain.medical_card.configuration.PropertiesConfig;
-import blockchain.medical_card.dto.DoctorDTO;
-import blockchain.medical_card.dto.exceptions.BlockchainAppException;
+import blockchain.medical_card.dto.exceptions.BlockChainAppException;
+import blockchain.medical_card.dto.exceptions.BlockChainCodeException;
 import blockchain.medical_card.dto.info.CityDTO;
-import blockchain.medical_card.utils.AlgorithmUtils;
-import blockchain.medical_card.utils.CommonUtils;
 import blockchain.medical_card.utils.FxUtils;
-import blockchain.medical_card.utils.JsonUtils;
-import com.google.gson.reflect.TypeToken;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
-import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
-import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 
 public class RegistrationController extends AbstractRegistrationController {
@@ -32,13 +23,10 @@ public class RegistrationController extends AbstractRegistrationController {
 	private ControllersConfiguration.ViewHolder loginViewHolder;
 
 	@Autowired
-	private CityDaoService cityDaoService;
-
-	@Autowired
 	private PropertiesConfig propertiesConfig;
 
 	@Autowired
-	private FileService fileService;
+	private RegistrationService registrationService;
 
 	@FXML
 	private TextField lastName;
@@ -63,54 +51,40 @@ public class RegistrationController extends AbstractRegistrationController {
 
 	@Override
 	protected List<CityDTO> getAllCities() {
-		return cityDaoService.getAllCities();
+		return registrationService.getAllCities();
 	}
 
-	public void register(ActionEvent actionEvent) throws BlockchainAppException {
-		DoctorDTO doctorDTO = new DoctorDTO();
-		doctorDTO.setFirstName(firstName.getText());
-		doctorDTO.setLastName(lastName.getText());
-		doctorDTO.setMiddleName(middleName.getText());
-		doctorDTO.setIin(iin.getText());
-		doctorDTO.setUsername(username.getText());
-		doctorDTO.setEmail(email.getText());
-		doctorDTO.setHospitalId(hospital.getValue() != null ? hospital.getValue().getHospitalId() : null);
-		String pass = CommonUtils.getRandomString();
-		doctorDTO.setPasswordHash(AlgorithmUtils.applySha256(pass));
-		doctorDTO.setPassword(pass);
-
-		String fileName = propertiesConfig
-				.getFilesLocation()
-				.concat(File.separator)
-				.concat(propertiesConfig.getDoctorsFileName());
-
-		List<DoctorDTO> doctorDTOs = JsonUtils
-				.getGson()
-				.fromJson(fileService.readFromFile(fileName), new TypeToken<List<DoctorDTO>>() {
-				}.getType());
-
-		if (CollectionUtils.isEmpty(doctorDTOs))
-			doctorDTOs = new ArrayList<>();
-
-		boolean doctorExists = doctorDTOs.stream().anyMatch(d ->
-				StringUtils.equalsIgnoreCase(d.getFirstName(), doctorDTO.getFirstName())
-						&& StringUtils.equalsIgnoreCase(d.getLastName(), doctorDTO.getLastName())
-						&& StringUtils.equalsIgnoreCase(d.getMiddleName(), doctorDTO.getMiddleName())
-						&& StringUtils.equalsIgnoreCase(d.getIin(), doctorDTO.getIin())
-						&& StringUtils.equals(d.getIin(), doctorDTO.getIin()));
-
-		if (doctorExists) {
+	public void register(ActionEvent actionEvent) throws BlockChainAppException {
+		try {
+			registrationService.registerDoctor(
+					firstName.getText(),
+					lastName.getText(),
+					middleName.getText(),
+					iin.getText(),
+					email.getText(),
+					username.getText(),
+					hospital.getValue() != null ? hospital.getValue().getHospitalId() : null);
+		} catch (BlockChainCodeException e) {
+			e.printStackTrace();
+			if (e.getExceptionCode() == BlockChainCodeException.ExceptionCode.DOCTOR_ALREADY_EXISTS) {
+				Alert alert = FxUtils.getAlertWindow(
+						propertiesConfig.getErrorMessage(),
+						null,
+						propertiesConfig.getExistsMessage(),
+						Alert.AlertType.ERROR);
+				alert.showAndWait();
+			}
+			return;
+		} catch (BlockChainAppException e) {
+			e.printStackTrace();
 			Alert alert = FxUtils.getAlertWindow(
 					propertiesConfig.getErrorMessage(),
 					null,
-					propertiesConfig.getExistsMessage(),
+					"",
 					Alert.AlertType.ERROR);
 			alert.showAndWait();
 			return;
 		}
-
-		doctorDTOs.add(doctorDTO);
-		fileService.writeToFile(fileName, JsonUtils.toJson(doctorDTOs));
 		setSignInScene(actionEvent);
 	}
 

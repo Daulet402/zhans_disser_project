@@ -1,13 +1,12 @@
 package blockchain.medical_card.fx.controllers;
 
 import blockchain.medical_card.api.Controller;
-import blockchain.medical_card.api.dao.PatientDaoService;
 import blockchain.medical_card.api.fx.IllnessRecordService;
 import blockchain.medical_card.configuration.ControllersConfiguration;
 import blockchain.medical_card.configuration.PropertiesConfig;
 import blockchain.medical_card.dto.DoctorDTO;
 import blockchain.medical_card.dto.PatientDTO;
-import blockchain.medical_card.dto.exceptions.BlockchainAppException;
+import blockchain.medical_card.dto.exceptions.BlockChainAppException;
 import blockchain.medical_card.dto.info.InspectionType;
 import blockchain.medical_card.services.UserSessionService;
 import blockchain.medical_card.utils.FxUtils;
@@ -30,9 +29,6 @@ public class IllnessRecordController implements Controller {
 	@Qualifier("patients")
 	@Autowired
 	private ControllersConfiguration.ViewHolder patientsViewHolder;
-
-	@Autowired
-	private PatientDaoService patientDaoService;
 
 	@Autowired
 	private PropertiesConfig propertiesConfig;
@@ -77,7 +73,13 @@ public class IllnessRecordController implements Controller {
 
 	public void back(ActionEvent actionEvent) {
 		FxUtils.clean(complaints, illnessHistory, diagnosis, plan);
+		inspectionType.setValue(null);
 		FxUtils.setScene(actionEvent, patientsViewHolder);
+		try {
+			((PatientsController) patientsViewHolder.getController()).initAllData();
+		} catch (BlockChainAppException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public void addIllnessRecord(ActionEvent actionEvent) {
@@ -102,7 +104,7 @@ public class IllnessRecordController implements Controller {
 			Alert alert = FxUtils.getAlertWindow(null, null, propertiesConfig.getSavedMessage(), Alert.AlertType.INFORMATION);
 			alert.showAndWait();
 			back(actionEvent);
-		} catch (BlockchainAppException e) {
+		} catch (BlockChainAppException e) {
 			e.printStackTrace();
 			Alert alert = FxUtils.getAlertWindow(
 					propertiesConfig.getErrorMessage(),
@@ -115,7 +117,7 @@ public class IllnessRecordController implements Controller {
 
 	public void setPatientDTO(PatientDTO patientDTO) {
 		if (patientDTO != null)
-			patientFio.setText(String.format("%s %s %s", patientDTO.getLastName(), patientDTO.getFirstName(), patientDTO.getMiddleName()));
+			patientFio.setText(patientDTO.getFullName());
 		this.patientDTO = patientDTO;
 		setDoctorFio();
 	}
@@ -123,7 +125,7 @@ public class IllnessRecordController implements Controller {
 	public void setDoctorFio() {
 		DoctorDTO doctor = userSessionService.getDoctor();
 		if (doctor != null) {
-			doctorFio.setText(String.format("%s %s %s", doctor.getFirstName(), doctor.getLastName(), doctor.getMiddleName()));
+			doctorFio.setText(doctor.getFullName());
 		}
 	}
 }

@@ -1,6 +1,6 @@
 package blockchain.medical_card.dto.exceptions;
 
-public class FileException extends BlockchainAppException {
+public class FileException extends BlockChainAppException {
 	public FileException() {
 	}
 

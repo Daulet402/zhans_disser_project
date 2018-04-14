@@ -1,13 +1,11 @@
 package blockchain.medical_card.api;
 
 
-import blockchain.medical_card.dto.exceptions.BlockchainAppException;
-
-import java.io.IOException;
+import blockchain.medical_card.dto.exceptions.BlockChainAppException;
 
 public interface FileService {
 
-	void writeToFile(String fileName, String json) throws BlockchainAppException;
+	void writeToFile(String fileName, String json) throws BlockChainAppException;
 
-	String readFromFile(String fileName) throws BlockchainAppException;
+	String readFromFile(String fileName) throws BlockChainAppException;
 }

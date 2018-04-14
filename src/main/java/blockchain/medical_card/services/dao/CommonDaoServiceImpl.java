@@ -1,6 +1,7 @@
 package blockchain.medical_card.services.dao;
 
-import blockchain.medical_card.api.dao.CityDaoService;
+import blockchain.medical_card.api.dao.CommonDaoService;
+import blockchain.medical_card.dto.HospitalDTO;
 import blockchain.medical_card.dto.info.CityDTO;
 import blockchain.medical_card.dto.mapper.CityResultSetExtractor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +11,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Component
-public class CityDaoServiceImpl implements CityDaoService {
+public class CommonDaoServiceImpl implements CommonDaoService {
 
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
@@ -22,5 +23,10 @@ public class CityDaoServiceImpl implements CityDaoService {
 						"from city c, district d, hospital h " +
 						"where h.district_id=d.district_id and d.city_id=c.city_id",
 				new CityResultSetExtractor());
+	}
+
+	@Override
+	public HospitalDTO getHospitalById(Long id) {
+		return null; // TODO: 04/11/2018 make cachable
 	}
 }

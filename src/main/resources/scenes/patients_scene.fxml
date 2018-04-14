@@ -53,43 +53,43 @@
                                     <Insets />
                                  </HBox.margin>
                               </Label>
-                              <Label id="address" fx:id="address" text="г.Алматы, ул. Абая д.47" />
+                              <Label id="address" fx:id="address" text="" />
                            </children>
                         </HBox>
                         <HBox alignment="CENTER_LEFT" spacing="10.0">
                            <children>
                               <Label text="ИИН:" />
-                              <Label id="iin" fx:id="iin" text="+770145841234" />
+                              <Label id="iin" fx:id="iin" text="" />
                            </children>
                         </HBox>
                         <HBox alignment="CENTER_LEFT" spacing="10.0">
                            <children>
                               <Label text="Телефон:" />
-                              <Label id="phoneNumber" fx:id="phoneNumber" text="+770145841234" />
+                              <Label id="phoneNumber" fx:id="phoneNumber" text="" />
                            </children>
                         </HBox>
                         <HBox alignment="CENTER_LEFT" spacing="10.0">
                            <children>
                               <Label text="Рост" />
-                              <Label id="height" fx:id="height" text="+770145841234" />
+                              <Label id="height" fx:id="height" text="" />
                            </children>
                         </HBox>
                         <HBox alignment="CENTER_LEFT" spacing="10.0">
                            <children>
                               <Label text="Вес" />
-                              <Label id="weight" fx:id="weight" text="+770145841234" />
+                              <Label id="weight" fx:id="weight" text="" />
                            </children>
                         </HBox>
                         <HBox alignment="CENTER_LEFT" spacing="10.0">
                            <children>
                               <Label text="Группа крови" />
-                              <Label id="bloodType" fx:id="bloodType" text="+770145841234" />
+                              <Label id="bloodType" fx:id="bloodType" text="" />
                            </children>
                         </HBox>
                         <HBox alignment="CENTER_LEFT" spacing="10.0">
                            <children>
                               <Label text="Место работы" />
-                              <Label id="workPlace" fx:id="workPlace" text="+770145841234" />
+                              <Label id="workPlace" fx:id="workPlace" text="" />
                            </children>
                         </HBox>
                      </children>
@@ -110,11 +110,11 @@
             </HBox>
             <TableView id="illnessRecords" fx:id="recordsTable" prefHeight="293.0" prefWidth="594.0">
               <columns>
-                <TableColumn prefWidth="118.0" text="Время записи" />
-                <TableColumn prefWidth="215.0" text="Врач" />
-                  <TableColumn prefWidth="186.0" text="Больница" />
-                  <TableColumn minWidth="0.0" prefWidth="126.0" text="Прием" />
-                  <TableColumn minWidth="0.0" prefWidth="295.0" text="Жалоба" />
+                <TableColumn prefWidth="118.0" text="Время записи" fx:id="visitTime" />
+                <TableColumn prefWidth="215.0" text="Врач"  fx:id="doctorFio"/>
+                  <TableColumn prefWidth="186.0" text="Больница" fx:id="hospitalName"/>
+                  <TableColumn minWidth="0.0" prefWidth="126.0" text="Прием" fx:id="inspectionType"/>
+                  <TableColumn minWidth="0.0" prefWidth="295.0" text="Жалоба" fx:id="complaint"/>
               </columns>
                <VBox.margin>
                   <Insets top="10.0" />
