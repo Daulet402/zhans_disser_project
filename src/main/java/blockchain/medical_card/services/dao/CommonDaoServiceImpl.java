@@ -16,17 +16,12 @@ public class CommonDaoServiceImpl implements CommonDaoService {
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
 
-	@Override
+	@Override // TODO: 04/15/2018 make cachable
 	public List<CityDTO> getAllCities() {
 		return (List<CityDTO>) jdbcTemplate.query(
 				"select c.city_id as city_id, c.name as city_name, c.code, d.district_id, d.name as district_name, h.hospital_id, h.name as hospital_name, h.address " +
 						"from city c, district d, hospital h " +
 						"where h.district_id=d.district_id and d.city_id=c.city_id",
 				new CityResultSetExtractor());
-	}
-
-	@Override
-	public HospitalDTO getHospitalById(Long id) {
-		return null; // TODO: 04/11/2018 make cachable
 	}
 }

@@ -51,7 +51,13 @@ public class DoctorDaoServiceImpl implements DoctorDaoService {
 
 	@Override
 	public DoctorDTO getDoctorById(String id) throws BlockChainAppException {
-		return null;
+		List<DoctorDTO> doctorDTOs = getAllDoctors();
+		return (CollectionUtils.isNotEmpty(doctorDTOs) && !StringUtils.isEmpty(id)) ? doctorDTOs
+				.stream()
+				.filter(doctorDTO -> StringUtils.equals(doctorDTO.getId(), id))
+				.findFirst()
+				.orElse(null)
+				: null;
 	}
 
 	public List<DoctorDTO> getAllDoctors() throws BlockChainAppException {
