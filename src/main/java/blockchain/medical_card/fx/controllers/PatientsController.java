@@ -87,8 +87,6 @@ public class PatientsController implements Controller {
 	@FXML
 	private Button detailButton;
 
-	private PatientDTO patientDTO;
-
 	@FXML
 	private TableColumn<TableItemDTO, String> visitTime;
 
@@ -103,6 +101,10 @@ public class PatientsController implements Controller {
 
 	@FXML
 	private TableColumn<TableItemDTO, String> complaint;
+
+	private PatientDTO patientDTO;
+
+	private String illnessRecordId;
 
 	@FXML
 	protected void initialize() {
@@ -140,6 +142,7 @@ public class PatientsController implements Controller {
 					}
 				} else {
 					addRecordButton.setDisable(true);
+					detailButton.setDisable(true);
 					//fillPatientInfo(null);
 				}
 		});
@@ -151,6 +154,14 @@ public class PatientsController implements Controller {
 		hospitalName.setCellValueFactory(new PropertyValueFactory("hospitalName"));
 		inspectionType.setCellValueFactory(new PropertyValueFactory("inspectionType"));
 		complaint.setCellValueFactory(new PropertyValueFactory("complaint"));
+
+		recordsTable.setOnMousePressed(event -> {
+			TableItemDTO tableItemDTO = recordsTable.getSelectionModel().getSelectedItem();
+			if (tableItemDTO != null) {
+				detailButton.setDisable(false);
+				setIllnessRecordId(tableItemDTO.getId());
+			}
+		});
 	}
 
 	private void fillPatientInfo(PatientDTO patientDTO) {
@@ -222,5 +233,6 @@ public class PatientsController implements Controller {
 	}
 
 	public void seeInDetail(ActionEvent actionEvent) {
+		System.out.println(getIllnessRecordId());
 	}
 }
