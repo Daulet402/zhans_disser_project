@@ -1,5 +1,7 @@
 package blockchain.medical_card.configuration;
 
+import com.mongodb.MongoClient;
+import com.mongodb.client.MongoDatabase;
 import lombok.Data;
 import org.apache.commons.dbcp.BasicDataSource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +39,17 @@ public class DataSourceConfiguration {
 	@Value("${app.datasource.maximum-wait-time}")
 	private long maxWaitTime;
 
+	@Value("${app.datasource.mongo.host}")
+	private String mongoHost;
+
+	@Value("${app.datasource.mongo.port}")
+	private Integer mongoPort;
+
+	@Value("${app.datasource.mongo.db}")
+	private String mongoDbName;
+
+
+
 	@Bean
 	public DataSource dataSource() {
 		BasicDataSource dataSource = new BasicDataSource();
@@ -53,5 +66,15 @@ public class DataSourceConfiguration {
 	@Bean
 	public JdbcTemplate jdbcTemplate(@Autowired DataSource dataSource) {
 		return new JdbcTemplate(dataSource);
+	}
+
+	@Bean
+	public MongoClient mongoClient() {
+		return new MongoClient(mongoHost, mongoPort);
+	}
+
+	@Bean
+	public MongoDatabase mongoDatabase(@Autowired MongoClient mongoClient) {
+		return mongoClient.getDatabase(mongoDbName);
 	}
 }

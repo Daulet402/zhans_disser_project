@@ -10,6 +10,7 @@ import blockchain.medical_card.dto.exceptions.BlockChainAppException;
 import blockchain.medical_card.dto.exceptions.MandatoryParameterMissedException;
 import blockchain.medical_card.services.UserSessionService;
 import blockchain.medical_card.utils.AlgorithmUtils;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -57,7 +58,7 @@ public class IllnessRecordServiceImpl implements IllnessRecordService {
 		//patientDaoService.addIllnessRecord(patientId, illnessRecordDTO); // TODO: 05/30/2018 read illness records of patients from block chain
 		List<IllnessRecordDTO> tempRecords = defaultIfEmpty(recordDao.getTempRecords(), new ArrayList<>());
 
-		if (/*CollectionUtils.size(tempRecords) < 4*/false) {
+		if (CollectionUtils.size(tempRecords) < 4) {
 			recordDao.addTempRecord(illnessRecordDTO);
 		} else {
 			tempRecords.add(illnessRecordDTO);
