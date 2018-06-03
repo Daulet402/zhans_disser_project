@@ -7,17 +7,18 @@ import com.google.gson.reflect.TypeToken;
 import org.bson.Document;
 import org.springframework.stereotype.Component;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
+import java.util.List;
 
 @Component
 public class RecordBlockHelper {
 
     public IllnessRecordBlock mapDocument(Document document) {
-        LinkedList<IllnessRecordDTO> illnessRecords = new LinkedList<>();
+        List<IllnessRecordDTO> illnessRecords = new ArrayList<>();
         if (document.containsKey("illnessRecords"))
             illnessRecords = JsonUtils.fromJsonToType(
                     document.get("illnessRecords").toString(),
-                    new TypeToken<LinkedList<IllnessRecordDTO>>() {
+                    new TypeToken<ArrayList<IllnessRecordDTO>>() {
                     }.getType()
             );
 

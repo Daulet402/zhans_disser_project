@@ -34,6 +34,7 @@ public class IllnessRecordBlock {
     }
 
     public void mineBlock(int difficulty) {
+        System.out.println("Mining block ....");
         String target = new String(new char[difficulty]).replace('\0', '0');
         while (!StringUtils.equals(StringUtils.substring(hash, 0, difficulty), target)) {
             nonce++;

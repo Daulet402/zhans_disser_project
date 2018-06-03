@@ -22,7 +22,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @PropertySource("classpath:app.datasource.properties")
 public class TestApp {
 
-    //@Autowired
+    //    @Autowired
     private RecordBlockHelper recordBlockHelper = new RecordBlockHelper();
 
     @Autowired

@@ -24,46 +24,46 @@ import static blockchain.medical_card.utils.CollectionUtils.defaultIfEmpty;
 @Service
 public class IllnessRecordServiceImpl implements IllnessRecordService {
 
-	@Autowired
-	private PatientDaoService patientDaoService;
+    @Autowired
+    private PatientDaoService patientDaoService;
 
-	@Autowired
-	private UserSessionService userSessionService;
+    @Autowired
+    private UserSessionService userSessionService;
 
-	@Autowired
-	private RecordDao recordDao;
+    @Autowired
+    private RecordDao recordDao;
 
-	@Autowired
-	private BlockDao blockDao;
+    @Autowired
+    private BlockDao blockDao;
 
-	@Override
-	public void addIllnessRecord(String patientId, String plan, String diagnosis, String complaints, String illnessHistory, String inspectionType) throws BlockChainAppException {
-		if (StringUtils.isEmpty(patientId))
-			throw new MandatoryParameterMissedException("patientId is missed");
+    @Override
+    public void addIllnessRecord(String patientId, String plan, String diagnosis, String complaints, String illnessHistory, String inspectionType) throws BlockChainAppException {
+        if (StringUtils.isEmpty(patientId))
+            throw new MandatoryParameterMissedException("patientId is missed");
 
-		DoctorDTO doctor = userSessionService.getDoctor();
+        DoctorDTO doctor = userSessionService.getDoctor();
 
-		IllnessRecordDTO illnessRecordDTO = new IllnessRecordDTO();
-		illnessRecordDTO.setPlan(plan);
-		illnessRecordDTO.setDiagnosis(diagnosis);
-		illnessRecordDTO.setComplaints(complaints);
-		illnessRecordDTO.setVisitTime(LocalDateTime.now()); // TODO: 04/09/2018 now or input ?
-		illnessRecordDTO.setIllnessHistory(illnessHistory);
-		illnessRecordDTO.setInspectionType(inspectionType);
-		illnessRecordDTO.setId(AlgorithmUtils.getUniqKey());
-		illnessRecordDTO.setPatientId(patientId);
-		if (doctor != null)
-			illnessRecordDTO.setDoctorId(doctor.getId());
+        IllnessRecordDTO illnessRecordDTO = new IllnessRecordDTO();
+        illnessRecordDTO.setPlan(plan);
+        illnessRecordDTO.setDiagnosis(diagnosis);
+        illnessRecordDTO.setComplaints(complaints);
+        illnessRecordDTO.setVisitTime(LocalDateTime.now()); // TODO: 04/09/2018 now or input ?
+        illnessRecordDTO.setIllnessHistory(illnessHistory);
+        illnessRecordDTO.setInspectionType(inspectionType);
+        illnessRecordDTO.setId(AlgorithmUtils.getUniqKey());
+        illnessRecordDTO.setPatientId(patientId);
+        if (doctor != null)
+            illnessRecordDTO.setDoctorId(doctor.getId());
 
-		//patientDaoService.addIllnessRecord(patientId, illnessRecordDTO); // TODO: 05/30/2018 read illness records of patients from block chain
-		List<IllnessRecordDTO> tempRecords = defaultIfEmpty(recordDao.getTempRecords(), new ArrayList<>());
+        //patientDaoService.addIllnessRecord(patientId, illnessRecordDTO); // TODO: 05/30/2018 read illness records of patients from block chain
+        List<IllnessRecordDTO> tempRecords = defaultIfEmpty(recordDao.getTempRecords(), new ArrayList<>());
 
-		if (CollectionUtils.size(tempRecords) < 4) {
-			recordDao.addTempRecord(illnessRecordDTO);
-		} else {
-			tempRecords.add(illnessRecordDTO);
-			blockDao.addRecords(tempRecords);
-			recordDao.clearTempRecordList();
-		}
-	}
+        if (CollectionUtils.size(tempRecords) < 4) {
+            recordDao.addTempRecord(illnessRecordDTO);
+        } else {
+            tempRecords.add(illnessRecordDTO);
+            blockDao.addRecords(tempRecords);
+            recordDao.clearTempRecordList();
+        }
+    }
 }
