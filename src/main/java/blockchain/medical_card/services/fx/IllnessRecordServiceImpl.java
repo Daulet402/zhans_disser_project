@@ -1,6 +1,8 @@
 package blockchain.medical_card.services.fx;
 
+import blockchain.medical_card.api.dao.BlockDao;
 import blockchain.medical_card.api.dao.PatientDaoService;
+import blockchain.medical_card.api.dao.RecordDao;
 import blockchain.medical_card.api.fx.IllnessRecordService;
 import blockchain.medical_card.dto.DoctorDTO;
 import blockchain.medical_card.dto.IllnessRecordDTO;
@@ -13,6 +15,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
+import static blockchain.medical_card.utils.CollectionUtils.defaultIfEmpty;
 
 @Service
 public class IllnessRecordServiceImpl implements IllnessRecordService {
@@ -22,6 +28,12 @@ public class IllnessRecordServiceImpl implements IllnessRecordService {
 
 	@Autowired
 	private UserSessionService userSessionService;
+
+	@Autowired
+	private RecordDao recordDao;
+
+	@Autowired
+	private BlockDao blockDao;
 
 	@Override
 	public void addIllnessRecord(String patientId, String plan, String diagnosis, String complaints, String illnessHistory, String inspectionType) throws BlockChainAppException {
@@ -38,9 +50,19 @@ public class IllnessRecordServiceImpl implements IllnessRecordService {
 		illnessRecordDTO.setIllnessHistory(illnessHistory);
 		illnessRecordDTO.setInspectionType(inspectionType);
 		illnessRecordDTO.setId(AlgorithmUtils.getUniqKey());
+		illnessRecordDTO.setPatientId(patientId);
 		if (doctor != null)
 			illnessRecordDTO.setDoctorId(doctor.getId());
 
-		patientDaoService.addIllnessRecord(patientId, illnessRecordDTO);
+		//patientDaoService.addIllnessRecord(patientId, illnessRecordDTO); // TODO: 05/30/2018 read illness records of patients from block chain
+		List<IllnessRecordDTO> tempRecords = defaultIfEmpty(recordDao.getTempRecords(), new ArrayList<>());
+
+		if (/*CollectionUtils.size(tempRecords) < 4*/false) {
+			recordDao.addTempRecord(illnessRecordDTO);
+		} else {
+			tempRecords.add(illnessRecordDTO);
+			blockDao.addRecords(tempRecords);
+			recordDao.clearTempRecordList();
+		}
 	}
 }

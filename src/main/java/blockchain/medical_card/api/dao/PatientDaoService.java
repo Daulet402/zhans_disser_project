@@ -14,5 +14,6 @@ public interface PatientDaoService {
 
 	List<PatientDTO> getPatientsByHospitalId(Long hospitalId) throws BlockChainAppException;
 
+	@Deprecated
 	void addIllnessRecord(String id, IllnessRecordDTO illnessRecordDTO) throws BlockChainAppException;
 }
