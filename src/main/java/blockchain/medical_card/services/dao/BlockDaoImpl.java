@@ -4,12 +4,10 @@ import blockchain.medical_card.api.FileService;
 import blockchain.medical_card.api.dao.BlockDao;
 import blockchain.medical_card.dto.IllnessRecordBlock;
 import blockchain.medical_card.dto.IllnessRecordDTO;
-import blockchain.medical_card.dto.PatientDTO;
 import blockchain.medical_card.dto.RecordBlockChain;
 import blockchain.medical_card.dto.exceptions.BlockChainAppException;
 import blockchain.medical_card.helpers.RecordBlockHelper;
-import blockchain.medical_card.utils.JsonUtils;
-import com.google.gson.reflect.TypeToken;
+import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import org.bson.Document;
@@ -18,6 +16,7 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.time.Instant;
+import java.util.LinkedList;
 import java.util.List;
 
 @Component
@@ -43,9 +42,7 @@ public class BlockDaoImpl implements BlockDao {
     @Override
     public void addRecords(List<IllnessRecordDTO> records) throws BlockChainAppException {
         IllnessRecordBlock block = new IllnessRecordBlock(Instant.now().getEpochSecond(), records, blockChain.getLatestBlock().getPreviousHash());
-        System.out.println("Mining block ....");
         blockChain.addBlock(block);
-        fileService.writeToFile(getBlocksFileName(), JsonUtils.toJson(blockChain.getBlocks()));
 
         MongoCollection<Document> recordBlocks = mongoDatabase.getCollection(RECORD_BLOCK_COLLECTION_NAME);
         Document document = recordBlockHelper.mapRecordBlock(block);
@@ -53,14 +50,11 @@ public class BlockDaoImpl implements BlockDao {
     }
 
     @Override
-    public List<IllnessRecordBlock> getBlocks() throws BlockChainAppException {
-        return JsonUtils
-                .getGson()
-                .fromJson(fileService.readFromFile(getBlocksFileName()), new TypeToken<List<PatientDTO>>() {
-                }.getType());
-    }
-
-    private String getBlocksFileName() {
-        return "C:\\blockchain\\blocks\\new_blocks.json";
+    public LinkedList<IllnessRecordBlock> getBlocks() throws BlockChainAppException {
+        LinkedList<IllnessRecordBlock> recordBlockList = new LinkedList<>();
+        FindIterable<Document> documents = mongoDatabase.getCollection(RECORD_BLOCK_COLLECTION_NAME).find();
+        for (Document document : documents)
+            recordBlockList.add(recordBlockHelper.mapDocument(document));
+        return recordBlockList;
     }
 }
