@@ -20,6 +20,9 @@ public class PropertiesConfig {
 	@Value("${app.data.files.patients.file}")
 	private String patientsFileName;
 
+	@Value("${app.data.files.temp_records.file}")
+	private String tempRecordsFileName;
+
 	//@Value("${error}")
 	private String errorMessage = "Ошибка";
 

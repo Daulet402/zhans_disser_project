@@ -5,8 +5,8 @@ import blockchain.medical_card.api.dao.PatientDaoService;
 import blockchain.medical_card.configuration.PropertiesConfig;
 import blockchain.medical_card.dto.IllnessRecordDTO;
 import blockchain.medical_card.dto.PatientDTO;
-import blockchain.medical_card.dto.exceptions.BlockChainCodeException;
 import blockchain.medical_card.dto.exceptions.BlockChainAppException;
+import blockchain.medical_card.dto.exceptions.BlockChainCodeException;
 import blockchain.medical_card.dto.exceptions.MandatoryParameterMissedException;
 import blockchain.medical_card.utils.JsonUtils;
 import com.google.gson.reflect.TypeToken;
@@ -79,7 +79,6 @@ public class PatientDaoServiceImpl implements PatientDaoService {
 		if (CollectionUtils.isEmpty(patientDTOs))
 			throw BlockChainCodeException.ofPatientNotFound("Patient list is empty");
 
-
 		PatientDTO patientDTO = patientDTOs
 				.stream().filter(p -> StringUtils.equals(id, p.getId()))
 				.findFirst()
@@ -89,6 +88,7 @@ public class PatientDaoServiceImpl implements PatientDaoService {
 
 		patientDTO.getIllnessRecordList().add(illnessRecordDTO);
 		fileService.writeToFile(getPatientsFileName(), JsonUtils.toJson(patientDTOs));
+		fileService.writeToFile("C:\\blockchain\\blocks\\temp.json", JsonUtils.toJson(illnessRecordDTO));
 	}
 
 	private String getPatientsFileName() {
