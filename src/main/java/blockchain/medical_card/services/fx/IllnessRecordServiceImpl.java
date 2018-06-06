@@ -1,6 +1,6 @@
 package blockchain.medical_card.services.fx;
 
-import blockchain.medical_card.api.dao.BlockDao;
+import blockchain.medical_card.api.BlockChainService;
 import blockchain.medical_card.api.dao.PatientDaoService;
 import blockchain.medical_card.api.dao.RecordDao;
 import blockchain.medical_card.api.fx.IllnessRecordService;
@@ -34,7 +34,7 @@ public class IllnessRecordServiceImpl implements IllnessRecordService {
     private RecordDao recordDao;
 
     @Autowired
-    private BlockDao blockDao;
+    private BlockChainService blockChainService;
 
     @Override
     public void addIllnessRecord(String patientId, String plan, String diagnosis, String complaints, String illnessHistory, String inspectionType) throws BlockChainAppException {
@@ -57,12 +57,11 @@ public class IllnessRecordServiceImpl implements IllnessRecordService {
 
         //patientDaoService.addIllnessRecord(patientId, illnessRecordDTO); // TODO: 05/30/2018 read illness records of patients from block chain
         List<IllnessRecordDTO> tempRecords = defaultIfEmpty(recordDao.getTempRecords(), new ArrayList<>());
-
         if (CollectionUtils.size(tempRecords) < 4) {
             recordDao.addTempRecord(illnessRecordDTO);
         } else {
             tempRecords.add(illnessRecordDTO);
-            blockDao.addRecords(tempRecords);
+            blockChainService.addRecords(tempRecords);
             recordDao.clearTempRecordList();
         }
     }
