@@ -5,6 +5,7 @@ import blockchain.medical_card.api.dao.PatientDaoService;
 import blockchain.medical_card.api.dao.RecordDao;
 import blockchain.medical_card.api.fx.IllnessRecordService;
 import blockchain.medical_card.dto.DoctorDTO;
+import blockchain.medical_card.dto.IllnessRecordBlock;
 import blockchain.medical_card.dto.IllnessRecordDTO;
 import blockchain.medical_card.dto.exceptions.BlockChainAppException;
 import blockchain.medical_card.dto.exceptions.MandatoryParameterMissedException;
@@ -17,7 +18,9 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static blockchain.medical_card.utils.CollectionUtils.defaultIfEmpty;
 
@@ -64,5 +67,22 @@ public class IllnessRecordServiceImpl implements IllnessRecordService {
             blockChainService.addRecords(tempRecords);
             recordDao.clearTempRecordList();
         }
+    }
+
+    @Override
+    public List<IllnessRecordDTO> getIllnessRecordsByPatientId(String patientId) {
+        List<IllnessRecordDTO> records = new ArrayList<>();
+        LinkedList<IllnessRecordBlock> blocks = blockChainService.getBlocks();
+        if (CollectionUtils.isNotEmpty(blocks)) {
+            for (IllnessRecordBlock block : blocks) {
+                if (CollectionUtils.isNotEmpty(block.getIllnessRecords())) {
+                    records.addAll(block.getIllnessRecords()
+                            .stream()
+                            .filter(recordDTO -> StringUtils.equals(patientId, recordDTO.getPatientId()))
+                            .collect(Collectors.toList()));
+                }
+            }
+        }
+        return records;
     }
 }
