@@ -1,6 +1,7 @@
 package blockchain.medical_card.fx.controllers;
 
 import blockchain.medical_card.api.Controller;
+import blockchain.medical_card.api.fx.IllnessRecordService;
 import blockchain.medical_card.api.fx.PatientsService;
 import blockchain.medical_card.configuration.ControllersConfiguration;
 import blockchain.medical_card.dto.AddressDTO;
@@ -48,6 +49,8 @@ public class PatientsController implements Controller {
 	@Autowired
 	private CommonDataHelper commonDataHelper;
 
+	@Autowired
+	private IllnessRecordService illnessRecordService;
 	@FXML
 	private Label workPlace;
 
@@ -136,8 +139,10 @@ public class PatientsController implements Controller {
 			if (newVal != null)
 				if (newVal.getValue().getObject() instanceof PatientDTO) {
 					if (newVal.getValue() != null) {
-						fillPatientInfo((PatientDTO) newVal.getValue().getObject());
-						setPatientDTO((PatientDTO) newVal.getValue().getObject());
+						PatientDTO patientDTO = (PatientDTO) newVal.getValue().getObject();
+						patientDTO.setIllnessRecordList(illnessRecordService.getIllnessRecordsByPatientId(patientDTO.getId()));
+						fillPatientInfo(patientDTO);
+						setPatientDTO(patientDTO);
 						addRecordButton.setDisable(false);
 					}
 				} else {

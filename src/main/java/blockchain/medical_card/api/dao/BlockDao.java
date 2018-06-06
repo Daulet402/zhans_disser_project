@@ -1,15 +1,11 @@
 package blockchain.medical_card.api.dao;
 
-import blockchain.medical_card.dto.IllnessRecordBlock;
-import blockchain.medical_card.dto.IllnessRecordDTO;
-import blockchain.medical_card.dto.exceptions.BlockChainAppException;
-
-import java.util.LinkedList;
-import java.util.List;
+import com.mongodb.client.FindIterable;
+import org.bson.Document;
 
 public interface BlockDao {
 
-    void addRecords(List<IllnessRecordDTO> records) throws BlockChainAppException;
+    void addDocument(Document document);
 
-    LinkedList<IllnessRecordBlock> getBlocks() throws BlockChainAppException;
+    FindIterable<Document> getDocuments();
 }
