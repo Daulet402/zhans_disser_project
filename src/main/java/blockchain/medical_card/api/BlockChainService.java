@@ -1,8 +1,8 @@
 package blockchain.medical_card.api;
 
-import blockchain.medical_card.dto.CheckResultDTO;
 import blockchain.medical_card.dto.IllnessRecordBlock;
 import blockchain.medical_card.dto.IllnessRecordDTO;
+import blockchain.medical_card.dto.ResultDTO;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -13,7 +13,7 @@ public interface BlockChainService {
 
     LinkedList<IllnessRecordBlock> getBlocks();
 
-    CheckResultDTO checkBlock(IllnessRecordBlock block);
+    ResultDTO checkBlock(IllnessRecordBlock block);
 
-    void addNewBlock(IllnessRecordBlock block);
+    ResultDTO addNewBlock(IllnessRecordBlock block);
 }

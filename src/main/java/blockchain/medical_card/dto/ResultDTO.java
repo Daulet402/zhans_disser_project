@@ -7,22 +7,23 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class CheckResultDTO {
-    private Result result;
+public class ResultDTO {
+    private ResultCode resultCode;
     private String from;
     private String errorMessage;
 
-    public CheckResultDTO(Result result, String from) {
-        this.result = result;
+    public ResultDTO(ResultCode resultCode, String from) {
+        this.resultCode = resultCode;
         this.from = from;
     }
 
-    public enum Result {
+    public enum ResultCode {
         ACCEPTABLE,
         NOT_ACCEPTABLE,
         INVALID_BLOCK,
         INVALID_CURRENT_BLOCKCHAIN,
         ERROR,
+        ADDED,
         UNKNOWN,
     }
 }
