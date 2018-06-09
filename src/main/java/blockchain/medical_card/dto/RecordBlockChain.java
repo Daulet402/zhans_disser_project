@@ -14,7 +14,12 @@ import java.util.List;
 @Data
 public class RecordBlockChain {
     private LinkedList<IllnessRecordBlock> blocks = new LinkedList<>();
-    private final int DIFFICULTY = 4;
+    private int DIFFICULTY = 4;
+
+    public RecordBlockChain(int DIFFICULTY) {
+        this.DIFFICULTY = DIFFICULTY;
+        addBlock(createGenesisBlock());
+    }
 
     public RecordBlockChain() {
         addBlock(createGenesisBlock());

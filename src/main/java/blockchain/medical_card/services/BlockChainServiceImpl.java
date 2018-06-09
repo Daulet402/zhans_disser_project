@@ -51,9 +51,4 @@ public class BlockChainServiceImpl implements BlockChainService {
             recordBlockList.add(recordBlockHelper.mapDocument(document));
         return recordBlockList;
     }
-
-    @Override
-    public void notifyAllNodes() {
-
-    }
 }

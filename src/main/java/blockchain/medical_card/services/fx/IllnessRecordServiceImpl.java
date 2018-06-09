@@ -60,7 +60,7 @@ public class IllnessRecordServiceImpl implements IllnessRecordService {
 
         //patientDaoService.addIllnessRecord(patientId, illnessRecordDTO); // TODO: 05/30/2018 read illness records of patients from block chain
         List<IllnessRecordDTO> tempRecords = defaultIfEmpty(recordDao.getTempRecords(), new ArrayList<>());
-        if (CollectionUtils.size(tempRecords) < 4) {
+        if (false/*CollectionUtils.size(tempRecords) < 4*/) {
             recordDao.addTempRecord(illnessRecordDTO);
         } else {
             tempRecords.add(illnessRecordDTO);

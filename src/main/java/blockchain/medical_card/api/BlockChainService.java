@@ -11,6 +11,4 @@ public interface BlockChainService {
     IllnessRecordBlock addRecords(List<IllnessRecordDTO> records);
 
     LinkedList<IllnessRecordBlock> getBlocks();
-
-    void notifyAllNodes();
 }
