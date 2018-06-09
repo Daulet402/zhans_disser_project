@@ -3,6 +3,7 @@ package common;
 import blockchain.medical_card.configuration.DataSourceConfiguration;
 import blockchain.medical_card.configuration.PropertiesConfig;
 import blockchain.medical_card.dto.IllnessRecordBlock;
+import blockchain.medical_card.dto.RecordBlockChain;
 import blockchain.medical_card.helpers.RecordBlockHelper;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
@@ -37,5 +38,18 @@ public class TestApp {
             IllnessRecordBlock recordBlock = recordBlockHelper.mapDocument(document);
             Assert.assertNotNull(recordBlock);
         }
+    }
+
+    @Test
+    public void testBlockMining() {
+        calculateDiff(4);
+        calculateDiff(5);
+    }
+
+    public void calculateDiff(int diff) {
+        long start = System.currentTimeMillis();
+        System.out.println(new RecordBlockChain(diff));
+        long end = System.currentTimeMillis();
+        System.out.println("Time to calculate hash with diff=" + diff + " " + (end - start) + " msec");
     }
 }

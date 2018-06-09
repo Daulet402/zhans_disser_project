@@ -1,5 +1,6 @@
 package blockchain.medical_card.dto;
 
+import blockchain.medical_card.api.Block;
 import blockchain.medical_card.utils.AlgorithmUtils;
 import blockchain.medical_card.utils.JsonUtils;
 import lombok.AllArgsConstructor;
@@ -12,7 +13,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class IllnessRecordBlock {
+public class IllnessRecordBlock implements Block {
     private String hash;
     private long nonce;
     private Long timestamp;

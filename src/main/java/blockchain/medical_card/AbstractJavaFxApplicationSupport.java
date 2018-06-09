@@ -21,9 +21,8 @@ public abstract class AbstractJavaFxApplicationSupport extends Application {
 		context.close();
 	}
 
-	protected static void launchApp(Class<? extends AbstractJavaFxApplicationSupport> appClass, String[] args, int ... port) {
+	protected static void launchApp(Class<? extends AbstractJavaFxApplicationSupport> appClass, String[] args) {
 		AbstractJavaFxApplicationSupport.savedArgs = args;
-		System.getProperties().put("server.port", port);
 		Application.launch(appClass, args);
 	}
 }
