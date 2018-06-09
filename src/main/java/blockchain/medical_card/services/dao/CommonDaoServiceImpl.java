@@ -29,6 +29,7 @@ public class CommonDaoServiceImpl implements CommonDaoService {
 	@Override
 	public List<HostDTO> getOtherHosts() {
 		return Arrays.asList(
+				getHost("localhost", 8080),
 				getHost("localhost", 7070),
 				getHost("localhost", 7071),
 				getHost("localhost", 7072),
