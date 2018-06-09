@@ -18,16 +18,25 @@ public class RecordBlockChain {
 
     public RecordBlockChain(int DIFFICULTY) {
         this.DIFFICULTY = DIFFICULTY;
-        addBlock(createGenesisBlock());
+        IllnessRecordBlock genesisBlock = createGenesisBlock();
+        mineBlock(genesisBlock);
+        addBlock(genesisBlock);
     }
 
     public RecordBlockChain() {
         addBlock(createGenesisBlock());
     }
 
+    public void mineBlock(IllnessRecordBlock block) {
+        block.mineBlock(getTargetHashPrefix());
+    }
+
+    public String getTargetHashPrefix() {
+        return new String(new char[DIFFICULTY]).replace('\0', '0');
+    }
+
     public boolean addBlock(IllnessRecordBlock block) {
         block.setPreviousHash(getLatestBlock() != null ? getLatestBlock().getHash() : "");
-        block.mineBlock(DIFFICULTY);
         //block.setHash(block.calculateHash());
         return blocks.add(block);
     }
