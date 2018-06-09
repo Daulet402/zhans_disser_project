@@ -2,7 +2,9 @@ package blockchain.medical_card.controllers;
 
 import blockchain.medical_card.api.BlockChainService;
 import blockchain.medical_card.api.CommunicationService;
+import blockchain.medical_card.dto.CheckResultDTO;
 import blockchain.medical_card.dto.IllnessRecordBlock;
+import blockchain.medical_card.utils.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -11,10 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
+import java.util.*;
 
 @RestController
 public class MedicalBlockChainController {
@@ -41,8 +40,9 @@ public class MedicalBlockChainController {
 			builder.append("\n");
 		});
 		return builder.toString();*/
-		IllnessRecordBlock block = new IllnessRecordBlock(Instant.now().getEpochSecond(), new ArrayList<>(), blockChainService.getBlocks().getLast().getPreviousHash());
-		communicationService.notifyAllNodes(block);
+		IllnessRecordBlock block = new IllnessRecordBlock(Instant.now().getEpochSecond(), new ArrayList<>(), blockChainService.getBlocks().getLast().getHash());
+		block.mineBlock("0000");
+		List<CheckResultDTO> resultDTOs = communicationService.notifyAllNodesToCheck(block);
 
 		HttpHeaders httpHeaders = new HttpHeaders();
 		httpHeaders.put("my-header", Arrays.asList("Some value", "Some value2", "Some value3", "value4"));
@@ -51,7 +51,7 @@ public class MedicalBlockChainController {
 		body.put("int", 32145);
 		body.put("pi", 3.14);
 		body.put("str", "This is string");
-		body.put("block", new IllnessRecordBlock());
+		body.put("result", resultDTOs);
 
 		ResponseEntity<LinkedHashMap> responseEntity = new ResponseEntity<>(body, httpHeaders, HttpStatus.OK);
 		return responseEntity;
@@ -62,11 +62,14 @@ public class MedicalBlockChainController {
 		return blockChainService.getBlocks();
 	}
 
-	@RequestMapping(value = "/blocks/new", method = RequestMethod.POST)
-	public void addNewBlock(@RequestBody IllnessRecordBlock block, @RequestHeader(value = "from-host", required = false) String from) {
-		System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-		System.out.println("!!!!   New block  from  " + from);
-		System.out.println(String.format("hash = %s, prev hash = %s, nonce = %s", block.getHash(), block.getPreviousHash(), block.getNonce()));
-		System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+	@RequestMapping(value = Constants.ADD_BLOCK_URI, method = RequestMethod.POST)
+	public void addNewBlock(@RequestBody IllnessRecordBlock block, @RequestHeader(value = Constants.FROM_HEADER_NAME, required = false) String from) {
+		blockChainService.addNewBlock(block);
+	}
+
+	@RequestMapping(value = Constants.CHECK_BLOCK_URI, method = RequestMethod.POST)
+	public CheckResultDTO isNewBlockValid(@RequestBody IllnessRecordBlock block, @RequestHeader(value = Constants.FROM_HEADER_NAME, required = false) String from) {
+		System.out.println("request to check block from " + from);
+		return blockChainService.checkBlock(block);
 	}
 }

@@ -34,10 +34,9 @@ public class IllnessRecordBlock implements Block {
                 String.valueOf(nonce));
     }
 
-    public void mineBlock(int difficulty) {
+    public void mineBlock(String target) {
         System.out.println("Mining block ....");
-        String target = new String(new char[difficulty]).replace('\0', '0');
-        while (!StringUtils.equals(StringUtils.substring(hash, 0, difficulty), target)) {
+        while (!StringUtils.startsWith(hash, target)) {
             nonce++;
             hash = calculateHash();
         }
