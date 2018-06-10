@@ -1,100 +1,81 @@
 package blockchain.medical_card.services.dao;
 
-import blockchain.medical_card.api.FileService;
 import blockchain.medical_card.api.dao.PatientDaoService;
-import blockchain.medical_card.configuration.PropertiesConfig;
-import blockchain.medical_card.dto.IllnessRecordDTO;
 import blockchain.medical_card.dto.PatientDTO;
 import blockchain.medical_card.dto.exceptions.BlockChainAppException;
 import blockchain.medical_card.dto.exceptions.BlockChainCodeException;
 import blockchain.medical_card.dto.exceptions.MandatoryParameterMissedException;
-import blockchain.medical_card.utils.JsonUtils;
-import com.google.gson.reflect.TypeToken;
-import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
+import blockchain.medical_card.mappers.PatientMapper;
+import com.mongodb.client.FindIterable;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
+import org.bson.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.io.File;
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Component
 public class PatientDaoServiceImpl implements PatientDaoService {
 
-	@Autowired
-	private FileService fileService;
+	public static final String PATIENTS_COLLECTION_NAME = "patients";
 
 	@Autowired
-	private PropertiesConfig propertiesConfig;
+	private MongoDatabase mongoDatabase;
+
+	@Autowired
+	private PatientMapper patientMapper;
 
 	@Override
 	public void addPatient(PatientDTO patient) throws BlockChainAppException {
 		if (patient == null)
 			throw new MandatoryParameterMissedException("Patient is required");
 
-		List<PatientDTO> patientDTOs = getAllPatients();
-		if (CollectionUtils.isEmpty(patientDTOs))
-			patientDTOs = new ArrayList<>();
-		else {
-			boolean patientExists = patientDTOs.stream().anyMatch(p ->
-					StringUtils.equalsIgnoreCase(p.getFirstName(), patient.getFirstName())
-							&& StringUtils.equalsIgnoreCase(p.getLastName(), patient.getLastName())
-							&& StringUtils.equalsIgnoreCase(p.getMiddleName(), patient.getMiddleName())
-							&& StringUtils.equals(p.getIin(), patient.getIin()));
+		PatientDTO patientByPersonalInfo = findPatientByPersonalInfo(patient.getFirstName(), patient.getLastName(), patient.getIin());
+		if (patientByPersonalInfo != null)
+			throw BlockChainCodeException.ofPatientAlreadyExist("This patient already exists");
 
-			if (patientExists)
-				throw BlockChainCodeException.ofPatientAlreadyExist("This patient already exists");
-		}
-		patientDTOs.add(patient);
-		fileService.writeToFile(getPatientsFileName(), JsonUtils.toJson(patientDTOs));
+		getCollection().insertOne(patientMapper.mapPatientDTO(patient));
 	}
 
 	@Override
 	public List<PatientDTO> getAllPatients() throws BlockChainAppException {
-		return JsonUtils
-				.getGson()
-				.fromJson(fileService.readFromFile(getPatientsFileName()), new TypeToken<List<PatientDTO>>() {
-				}.getType());
+		List<PatientDTO> patients = new ArrayList<>();
+		FindIterable<Document> documents = getCollection().find();
+		for (Document document : documents)
+			patients.add(patientMapper.mapDocument(document));
 
+		return patients;
 	}
 
 	@Override
 	public List<PatientDTO> getPatientsByHospitalId(Long hospitalId) throws BlockChainAppException {
-		List<PatientDTO> patientDTOs = getAllPatients();
-		return CollectionUtils.isEmpty(patientDTOs) || hospitalId == null ? Collections.emptyList() :
-				patientDTOs
-						.stream()
-						.filter(patientDTO -> patientDTO.getHospitalId() != null)
-						.filter(patientDTO -> Long.valueOf(hospitalId).compareTo(patientDTO.getHospitalId()) == 0)
-						.collect(Collectors.toList());
+		List<PatientDTO> patients = new ArrayList<>();
+		FindIterable<Document> documents = getCollection()
+				.find(new BsonDocument("hospitalId", new BsonInt64(hospitalId)));
+
+		for (Document document : documents)
+			patients.add(patientMapper.mapDocument(document));
+
+		return patients;
 	}
 
 	@Override
-	public void addIllnessRecord(String id, IllnessRecordDTO illnessRecordDTO) throws BlockChainAppException {
-		List<PatientDTO> patientDTOs = getAllPatients();
+	public PatientDTO findPatientByPersonalInfo(String firstName, String lastName, String iin) throws BlockChainAppException {
+		BsonElement firstNameElement = new BsonElement("firstName", new BsonString(firstName));
+		BsonElement lastNameElement = new BsonElement("lastName", new BsonString(lastName));
+		BsonElement iinElement = new BsonElement("iin", new BsonString(iin));
 
-		if (CollectionUtils.isEmpty(patientDTOs))
-			throw BlockChainCodeException.ofPatientNotFound("Patient list is empty");
+		Document document = getCollection()
+				.find(new BsonDocument(Arrays.asList(firstNameElement, lastNameElement, iinElement)))
+				.first();
 
-		PatientDTO patientDTO = patientDTOs
-				.stream().filter(p -> StringUtils.equals(id, p.getId()))
-				.findFirst()
-				.orElseThrow(() -> BlockChainCodeException
-						.ofPatientNotFound(String.format("Patient with id %s not found", id))
-				);
-
-		patientDTO.getIllnessRecordList().add(illnessRecordDTO);
-		fileService.writeToFile(getPatientsFileName(), JsonUtils.toJson(patientDTOs));
-		fileService.writeToFile("C:\\blockchain\\blocks\\temp.json", JsonUtils.toJson(illnessRecordDTO));
+		return document != null ? patientMapper.mapDocument(document) : null;
 	}
 
-	private String getPatientsFileName() {
-		return propertiesConfig
-				.getFilesLocation()
-				.concat(File.separator)
-				.concat(propertiesConfig.getPatientsFileName());
+	private MongoCollection<Document> getCollection() {
+		return mongoDatabase.getCollection(PATIENTS_COLLECTION_NAME);
 	}
 }

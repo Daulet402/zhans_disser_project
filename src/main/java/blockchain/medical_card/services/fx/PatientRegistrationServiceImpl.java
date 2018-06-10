@@ -7,7 +7,6 @@ import blockchain.medical_card.dto.AddressDTO;
 import blockchain.medical_card.dto.PatientDTO;
 import blockchain.medical_card.dto.exceptions.BlockChainAppException;
 import blockchain.medical_card.dto.info.CityDTO;
-import blockchain.medical_card.utils.AlgorithmUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -54,7 +53,6 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
 		patientDTO.setHospitalId(hospitalId);
 		patientDTO.setMiddleName(middleName);
 		patientDTO.setPhoneNumber(phoneNumber);
-		patientDTO.setId(AlgorithmUtils.getUniqKey());
 		patientDTO.setAddress(new AddressDTO(cityId, districtId, address));
 
 		patientDaoService.addPatient(patientDTO);
