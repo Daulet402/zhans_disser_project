@@ -1,88 +1,78 @@
 package blockchain.medical_card.services.dao;
 
-import blockchain.medical_card.api.FileService;
 import blockchain.medical_card.api.dao.DoctorDaoService;
-import blockchain.medical_card.configuration.PropertiesConfig;
 import blockchain.medical_card.dto.DoctorDTO;
 import blockchain.medical_card.dto.exceptions.BlockChainAppException;
 import blockchain.medical_card.dto.exceptions.BlockChainCodeException;
 import blockchain.medical_card.dto.exceptions.MandatoryParameterMissedException;
-import blockchain.medical_card.utils.JsonUtils;
-import com.google.gson.reflect.TypeToken;
-import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
+import blockchain.medical_card.helpers.mappers.DoctorMapper;
+import com.mongodb.client.FindIterable;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
+import org.bson.BsonDocument;
+import org.bson.BsonString;
+import org.bson.Document;
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.mongodb.client.model.Filters.eq;
+
 
 @Component
 public class DoctorDaoServiceImpl implements DoctorDaoService {
 
-	@Autowired
-	private FileService fileService;
+	public static final String DOCTORS_COLLECTION_NAME = "doctors";
 
 	@Autowired
-	private PropertiesConfig propertiesConfig;
+	private MongoDatabase mongoDatabase;
+
+	@Autowired
+	private DoctorMapper doctorMapper;
 
 	@Override
 	public void addDoctor(DoctorDTO doctor) throws BlockChainAppException {
 		if (doctor == null)
 			throw new MandatoryParameterMissedException("Doctor is required");
 
-		List<DoctorDTO> doctorDTOs = getAllDoctors();
-		if (CollectionUtils.isEmpty(doctorDTOs)) {
-			doctorDTOs = new ArrayList<>();
-		} else {
-			boolean doctorExists = doctorDTOs.stream().anyMatch(d ->
-					StringUtils.equalsIgnoreCase(d.getFirstName(), doctor.getFirstName())
-							&& StringUtils.equalsIgnoreCase(d.getLastName(), doctor.getLastName())
-							&& StringUtils.equalsIgnoreCase(d.getMiddleName(), doctor.getMiddleName())
-							&& StringUtils.equals(d.getIin(), doctor.getIin()));
+		DoctorDTO doctorByUsername = getDoctorByUsername(doctor.getUsername());
+		if (doctorByUsername != null)
+			throw BlockChainCodeException.ofDoctorAlreadyExist("Doctor already exists");
 
-			if (doctorExists)
-				throw BlockChainCodeException.ofDoctorAlreadyExist("Doctor already exists");
-		}
-		doctorDTOs.add(doctor);
-		fileService.writeToFile(getDoctorsFileName(), JsonUtils.toJson(doctorDTOs));
+		getCollection().insertOne(doctorMapper.mapDoctorDTO(doctor));
 	}
 
 	@Override
 	public DoctorDTO getDoctorById(String id) throws BlockChainAppException {
-		List<DoctorDTO> doctorDTOs = getAllDoctors();
-		return (CollectionUtils.isNotEmpty(doctorDTOs) && !StringUtils.isEmpty(id)) ? doctorDTOs
-				.stream()
-				.filter(doctorDTO -> StringUtils.equals(doctorDTO.getId(), id))
-				.findFirst()
-				.orElse(null)
-				: null;
+		Document document = getCollection().find(eq("_id", new ObjectId(id))).first();
+		if (document == null)
+			throw BlockChainCodeException.ofDoctorNotFound(String.format("Doctor with id %s not found", id));
+
+		return doctorMapper.mapDocument(document);
 	}
 
+	@Override
 	public List<DoctorDTO> getAllDoctors() throws BlockChainAppException {
-		return JsonUtils
-				.getGson()
-				.fromJson(fileService.readFromFile(getDoctorsFileName()), new TypeToken<List<DoctorDTO>>() {
-				}.getType());
+		List<DoctorDTO> doctors = new ArrayList<>();
+		FindIterable<Document> documents = getCollection().find();
+		for (Document document : documents)
+			doctors.add(doctorMapper.mapDocument(document));
 
+		return doctors;
 	}
 
 	@Override
 	public DoctorDTO getDoctorByUsername(String username) throws BlockChainAppException {
-		List<DoctorDTO> doctorDTOs = getAllDoctors();
-		return CollectionUtils.isNotEmpty(doctorDTOs) ? doctorDTOs
-				.stream()
-				.filter(doctorDTO -> StringUtils.equals(doctorDTO.getUsername(), username))
-				.findFirst()
-				.orElse(null)
-				: null;
+		Document document = getCollection()
+				.find(new BsonDocument("username", new BsonString(username)))
+				.first();
+		return document != null ? doctorMapper.mapDocument(document) : null;
 	}
 
-	private String getDoctorsFileName() {
-		return propertiesConfig
-				.getFilesLocation()
-				.concat(File.separator)
-				.concat(propertiesConfig.getDoctorsFileName());
+	private MongoCollection<Document> getCollection() {
+		return mongoDatabase.getCollection(DOCTORS_COLLECTION_NAME);
 	}
 }
