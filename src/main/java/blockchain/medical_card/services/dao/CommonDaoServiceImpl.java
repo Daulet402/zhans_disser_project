@@ -34,7 +34,7 @@ public class CommonDaoServiceImpl implements CommonDaoService {
 				getHost("localhost", 7071),
 				getHost("localhost", 7072),
 				getHost("localhost", 7073),
-				getHost("localhost", 7074),
+				//getHost("localhost", 7074),
 				getHost("localhost", 7075)
 		);
 	}

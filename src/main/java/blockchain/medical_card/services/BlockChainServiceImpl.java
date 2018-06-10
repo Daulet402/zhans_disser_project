@@ -44,6 +44,7 @@ public class BlockChainServiceImpl implements BlockChainService {
     @Override
     public IllnessRecordBlock addRecords(List<IllnessRecordDTO> records) {
         IllnessRecordBlock block = new IllnessRecordBlock(Instant.now().getEpochSecond(), records, blockChain.getLatestBlock().getHash());
+        block.setPreviousHash(blockChain.getPreviousHash());
         blockChain.mineBlock(block);
         List<ResultDTO> checkResults = communicationService.notifyAllNodesToCheck(block);
         if (CollectionUtils.isEmpty(checkResults)) {
@@ -59,7 +60,7 @@ public class BlockChainServiceImpl implements BlockChainService {
 
         double acceptablePercentage = (double) acceptableCount / checkResults.size();
         System.out.println("acceptablePercentage " + acceptablePercentage);
-        if (acceptablePercentage >= 0.5) {
+        if (acceptablePercentage >= 0.6) {
             blockChain.addBlock(block);
             List<ResultDTO> addResults = communicationService.notifyAllNodesToAdd(block);
             if (CollectionUtils.isEmpty(addResults)) {
@@ -67,9 +68,9 @@ public class BlockChainServiceImpl implements BlockChainService {
             }
             for (ResultDTO addResult : addResults) {
                 System.out.println(String.format("addResult = %s %s", addResult.getFrom(), addResult.getResultCode()));
-            }
+            }// TODO: 06/10/2018 send to those who accepted, and force update for those, who didnt accepted
             Document document = recordBlockMapper.mapRecordBlock(block);
-            //blockDao.addDocument(document);
+            blockDao.addDocument(document);
         } else {
             System.out.println("AcceptablePercentage is too low to add new block. Try again");
         }
