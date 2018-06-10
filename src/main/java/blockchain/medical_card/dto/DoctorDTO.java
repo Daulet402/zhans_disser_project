@@ -14,5 +14,4 @@ public class DoctorDTO extends AbstractPerson {
 	private String username;
 	private String email;
 	private String passwordHash;
-	private String password;
 }
