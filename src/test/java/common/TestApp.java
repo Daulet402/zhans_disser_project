@@ -4,7 +4,7 @@ import blockchain.medical_card.configuration.DataSourceConfiguration;
 import blockchain.medical_card.configuration.PropertiesConfig;
 import blockchain.medical_card.dto.IllnessRecordBlock;
 import blockchain.medical_card.dto.RecordBlockChain;
-import blockchain.medical_card.helpers.RecordBlockHelper;
+import blockchain.medical_card.mappers.RecordBlockMapper;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
@@ -24,7 +24,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 public class TestApp {
 
     //    @Autowired
-    private RecordBlockHelper recordBlockHelper = new RecordBlockHelper();
+    private RecordBlockMapper recordBlockMapper = new RecordBlockMapper();
 
     @Autowired
     private MongoDatabase mongoDatabase;
@@ -35,7 +35,7 @@ public class TestApp {
         MongoCollection<Document> recordBlocks = mongoDatabase.getCollection("record_blocks");
         FindIterable<Document> documents = recordBlocks.find();
         for (Document document : documents) {
-            IllnessRecordBlock recordBlock = recordBlockHelper.mapDocument(document);
+            IllnessRecordBlock recordBlock = recordBlockMapper.mapDocument(document);
             Assert.assertNotNull(recordBlock);
         }
     }

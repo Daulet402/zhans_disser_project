@@ -12,7 +12,7 @@ import blockchain.medical_card.dto.gui.TableItemDTO;
 import blockchain.medical_card.dto.gui.TreeItemDTO;
 import blockchain.medical_card.dto.info.CityDTO;
 import blockchain.medical_card.dto.info.DistrictDTO;
-import blockchain.medical_card.helpers.CommonDataHelper;
+import blockchain.medical_card.mappers.CommonDataMapper;
 import blockchain.medical_card.services.UserSessionService;
 import blockchain.medical_card.utils.FxUtils;
 import javafx.collections.FXCollections;
@@ -47,7 +47,7 @@ public class PatientsController implements Controller {
 	private PatientsService patientsService;
 
 	@Autowired
-	private CommonDataHelper commonDataHelper;
+	private CommonDataMapper commonDataMapper;
 
 	@Autowired
 	private IllnessRecordService illnessRecordService;
@@ -182,7 +182,7 @@ public class PatientsController implements Controller {
 			weight.setText(String.valueOf(patientDTO.getWeight()));
 			bloodType.setText(patientDTO.getBloodType());
 			workPlace.setText(patientDTO.getWorkPlace());
-			recordsTable.setItems(FXCollections.observableArrayList(commonDataHelper.mapTableItem(patientDTO.getIllnessRecordList())));
+			recordsTable.setItems(FXCollections.observableArrayList(commonDataMapper.mapTableItem(patientDTO.getIllnessRecordList())));
 		} else {
 			fio.setText("");
 			address.setText("");

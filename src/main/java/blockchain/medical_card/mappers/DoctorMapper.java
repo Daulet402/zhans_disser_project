@@ -1,4 +1,4 @@
-package blockchain.medical_card.helpers.mappers;
+package blockchain.medical_card.mappers;
 
 import blockchain.medical_card.dto.AddressDTO;
 import blockchain.medical_card.dto.DoctorDTO;
