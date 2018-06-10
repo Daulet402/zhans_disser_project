@@ -15,6 +15,7 @@ public class BlockChainCodeException extends BlockChainAppException {
 		PATIENT_ALREADY_EXISTS,
 		DOCTOR_ALREADY_EXISTS,
 		PATIENT_NOT_FOUND,
+		DOCTOR_NOT_FOUND,
 	}
 
 	public BlockChainCodeException(String message) {
@@ -40,5 +41,9 @@ public class BlockChainCodeException extends BlockChainAppException {
 
 	public static BlockChainCodeException ofPatientNotFound(String message) {
 		return new BlockChainCodeException(ExceptionCode.PATIENT_NOT_FOUND, message);
+	}
+
+	public static BlockChainCodeException ofDoctorNotFound(String message) {
+		return new BlockChainCodeException(ExceptionCode.DOCTOR_NOT_FOUND, message);
 	}
 }

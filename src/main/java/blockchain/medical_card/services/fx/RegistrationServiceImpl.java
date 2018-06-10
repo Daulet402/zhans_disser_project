@@ -44,7 +44,7 @@ public class RegistrationServiceImpl implements RegistrationService {
 		doctorDTO.setEmail(email);
 		doctorDTO.setLastName(lastName);
 		doctorDTO.setUsername(username);
-		doctorDTO.setId(AlgorithmUtils.getUniqKey());
+		//doctorDTO.setId(AlgorithmUtils.getUniqKey());
 		doctorDTO.setFirstName(firstName);
 		doctorDTO.setMiddleName(middleName);
 		doctorDTO.setHospitalId(hospitalId);
