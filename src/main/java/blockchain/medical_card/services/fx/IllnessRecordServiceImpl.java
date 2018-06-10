@@ -18,11 +18,10 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import static blockchain.medical_card.utils.CollectionUtils.defaultIfEmpty;
 
 @Service
 public class IllnessRecordServiceImpl implements IllnessRecordService {
@@ -59,14 +58,7 @@ public class IllnessRecordServiceImpl implements IllnessRecordService {
             illnessRecordDTO.setDoctorId(doctor.getId());
 
         //patientDaoService.addIllnessRecord(patientId, illnessRecordDTO); // TODO: 05/30/2018 read illness records of patients from block chain
-        List<IllnessRecordDTO> tempRecords = defaultIfEmpty(recordDao.getTempRecords(), new ArrayList<>());
-        if (false/*CollectionUtils.size(tempRecords) < 4*/) {
-            recordDao.addTempRecord(illnessRecordDTO);
-        } else {
-            tempRecords.add(illnessRecordDTO);
-            blockChainService.addRecords(tempRecords);
-            recordDao.clearTempRecordList();
-        }
+        blockChainService.addRecords(Arrays.asList(illnessRecordDTO));
     }
 
     @Override

@@ -11,7 +11,10 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -24,6 +27,20 @@ public class RecordDaoImpl implements RecordDao {
 
     @Autowired
     private PropertiesConfig propertiesConfig;
+
+    private File tempFile;
+
+    @PostConstruct
+    public void init() throws IOException {
+        tempFile = File.createTempFile("temp_records", ".json");
+    }
+
+    @PreDestroy
+    public void destroy() {
+        if (!tempFile.delete()) {
+            tempFile.deleteOnExit();
+        }
+    }
 
     @Override
     public List<IllnessRecordDTO> getTempRecords() throws BlockChainAppException {
@@ -48,6 +65,7 @@ public class RecordDaoImpl implements RecordDao {
     }
 
     private String getTempRecordsFileName() {
+        //tempFile.getAbsolutePath();
         return propertiesConfig
                 .getFilesLocation()
                 .concat(File.separator)
