@@ -24,7 +24,9 @@ public class RecordBlockChain {
     }
 
     public RecordBlockChain() {
-        addBlock(createGenesisBlock());
+        IllnessRecordBlock genesisBlock = createGenesisBlock();
+        mineBlock(genesisBlock);
+        addBlock(genesisBlock);
     }
 
     public void mineBlock(IllnessRecordBlock block) {
@@ -35,6 +37,9 @@ public class RecordBlockChain {
         return new String(new char[DIFFICULTY]).replace('\0', '0');
     }
 
+    public String getPreviousHash() {
+        return getLatestBlock() != null ? getLatestBlock().getHash() : "";
+    }
     public boolean addBlock(IllnessRecordBlock block) {
         block.setPreviousHash(getLatestBlock() != null ? getLatestBlock().getHash() : "");
         //block.setHash(block.calculateHash());
@@ -46,7 +51,7 @@ public class RecordBlockChain {
     }
 
     public IllnessRecordBlock createGenesisBlock() {
-        IllnessRecordBlock genesisBlock = new IllnessRecordBlock(Instant.now().getEpochSecond(), null, "0");
+        IllnessRecordBlock genesisBlock = new IllnessRecordBlock(Instant.MIN.getEpochSecond(), null, "0");
         genesisBlock.setIsGenesisBlock(Boolean.TRUE);
         return genesisBlock;
     }
