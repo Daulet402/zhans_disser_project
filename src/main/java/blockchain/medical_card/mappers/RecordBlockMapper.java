@@ -1,4 +1,4 @@
-package blockchain.medical_card.helpers;
+package blockchain.medical_card.mappers;
 
 import blockchain.medical_card.dto.IllnessRecordBlock;
 import blockchain.medical_card.dto.IllnessRecordDTO;
@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class RecordBlockHelper {
+public class RecordBlockMapper {
 
     public IllnessRecordBlock mapDocument(Document document) {
         List<IllnessRecordDTO> illnessRecords = new ArrayList<>();

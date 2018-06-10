@@ -7,7 +7,7 @@ import blockchain.medical_card.dto.IllnessRecordBlock;
 import blockchain.medical_card.dto.IllnessRecordDTO;
 import blockchain.medical_card.dto.RecordBlockChain;
 import blockchain.medical_card.dto.ResultDTO;
-import blockchain.medical_card.helpers.RecordBlockHelper;
+import blockchain.medical_card.mappers.RecordBlockMapper;
 import com.mongodb.client.FindIterable;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -26,7 +26,7 @@ public class BlockChainServiceImpl implements BlockChainService {
     private RecordBlockChain blockChain;
 
     @Autowired
-    private RecordBlockHelper recordBlockHelper;
+    private RecordBlockMapper recordBlockMapper;
 
     @Autowired
     private BlockDao blockDao;
@@ -68,7 +68,7 @@ public class BlockChainServiceImpl implements BlockChainService {
             for (ResultDTO addResult : addResults) {
                 System.out.println(String.format("addResult = %s %s", addResult.getFrom(), addResult.getResultCode()));
             }
-            Document document = recordBlockHelper.mapRecordBlock(block);
+            Document document = recordBlockMapper.mapRecordBlock(block);
             //blockDao.addDocument(document);
         } else {
             System.out.println("AcceptablePercentage is too low to add new block. Try again");
@@ -81,7 +81,7 @@ public class BlockChainServiceImpl implements BlockChainService {
         LinkedList<IllnessRecordBlock> recordBlockList = new LinkedList<>();
         FindIterable<Document> documents = blockDao.getDocuments();
         for (Document document : documents)
-            recordBlockList.add(recordBlockHelper.mapDocument(document));
+            recordBlockList.add(recordBlockMapper.mapDocument(document));
         return recordBlockList;
     }
 

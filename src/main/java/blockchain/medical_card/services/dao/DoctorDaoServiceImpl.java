@@ -5,7 +5,7 @@ import blockchain.medical_card.dto.DoctorDTO;
 import blockchain.medical_card.dto.exceptions.BlockChainAppException;
 import blockchain.medical_card.dto.exceptions.BlockChainCodeException;
 import blockchain.medical_card.dto.exceptions.MandatoryParameterMissedException;
-import blockchain.medical_card.helpers.mappers.DoctorMapper;
+import blockchain.medical_card.mappers.DoctorMapper;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;

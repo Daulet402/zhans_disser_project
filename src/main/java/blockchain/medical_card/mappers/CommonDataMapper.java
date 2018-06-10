@@ -1,4 +1,4 @@
-package blockchain.medical_card.helpers;
+package blockchain.medical_card.mappers;
 
 import blockchain.medical_card.api.dao.CommonDaoService;
 import blockchain.medical_card.api.dao.DoctorDaoService;
@@ -21,7 +21,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Component
-public class CommonDataHelper {
+public class CommonDataMapper {
 
 	@Autowired
 	private DoctorDaoService doctorDaoService;
