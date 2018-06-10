@@ -16,7 +16,6 @@ public class DoctorMapper {
         Document document = new Document();
         document.put("iin", doctorDTO.getIin());
         document.put("email", doctorDTO.getEmail());
-        document.put("password", doctorDTO.getPassword());
         document.put("username", doctorDTO.getUsername());
         document.put("lastName", doctorDTO.getLastName());
         document.put("firstName", doctorDTO.getFirstName());
