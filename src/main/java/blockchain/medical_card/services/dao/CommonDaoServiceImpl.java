@@ -4,11 +4,11 @@ import blockchain.medical_card.api.dao.CommonDaoService;
 import blockchain.medical_card.dto.HostDTO;
 import blockchain.medical_card.dto.info.CityDTO;
 import blockchain.medical_card.dto.mapper.CityResultSetExtractor;
+import blockchain.medical_card.dto.mapper.HostDTOMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
-import java.util.Arrays;
 import java.util.List;
 
 @Component
@@ -28,21 +28,8 @@ public class CommonDaoServiceImpl implements CommonDaoService {
 
 	@Override
 	public List<HostDTO> getOtherHosts() {
-		return Arrays.asList(
-				getHost("localhost", 8080),
-				getHost("localhost", 7070),
-				getHost("localhost", 7071),
-				getHost("localhost", 7072),
-				getHost("localhost", 7073),
-				//getHost("localhost", 7074),
-				getHost("localhost", 7075)
-		);
-	}
-
-	private HostDTO getHost(String address, int port) {
-		HostDTO host = new HostDTO();
-		host.setAddress(address);
-		host.setPort(port);
-		return host;
+		return (List<HostDTO>) jdbcTemplate.query(
+				"select * from hosts",
+				new HostDTOMapper());
 	}
 }
