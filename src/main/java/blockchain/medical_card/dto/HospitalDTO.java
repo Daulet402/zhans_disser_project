@@ -8,14 +8,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class HospitalDTO {
-	private Long hospitalId;
-	private String name;
-	private Long districtId;
-	//private AddressDTO address;
-	private String address;
+    private Long hospitalId;
+    private String name;
+    private Long districtId;
+    private String address;
 
-	@Override
-	public String toString() {
-		return getName();
-	}
+    @Override
+    public String toString() {
+        return getName();
+    }
 }

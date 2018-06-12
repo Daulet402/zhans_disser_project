@@ -17,7 +17,7 @@ public class CommonDaoServiceImpl implements CommonDaoService {
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
 
-	@Override // TODO: 04/15/2018 make cachable
+	@Override
 	public List<CityDTO> getAllCities() {
 		return (List<CityDTO>) jdbcTemplate.query(
 				"select c.city_id as city_id, c.name as city_name, c.code, d.district_id, d.name as district_name, h.hospital_id, h.name as hospital_name, h.address " +

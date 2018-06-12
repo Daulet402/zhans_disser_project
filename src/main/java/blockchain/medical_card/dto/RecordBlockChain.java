@@ -69,32 +69,4 @@ public class RecordBlockChain {
         }
         return true;
     }
-
-    public static void main(String[] args) {
-        RecordBlockChain blockChain = new RecordBlockChain();
-        IllnessRecordBlock block1 = new IllnessRecordBlock(Instant.now().getEpochSecond(), getRecordsList(), blockChain.getLatestBlock().getPreviousHash());
-        IllnessRecordBlock block2 = new IllnessRecordBlock(Instant.now().getEpochSecond(), getRecordsList(), blockChain.getLatestBlock().getPreviousHash());
-        IllnessRecordBlock block3 = new IllnessRecordBlock(Instant.now().getEpochSecond(), getRecordsList(), blockChain.getLatestBlock().getPreviousHash());
-        IllnessRecordBlock block4 = new IllnessRecordBlock(Instant.now().getEpochSecond(), getRecordsList(), blockChain.getLatestBlock().getPreviousHash());
-
-        System.out.println("Mining block1 ...");
-        blockChain.addBlock(block1);
-        System.out.println("Mining block2 ...");
-        blockChain.addBlock(block2);
-        System.out.println("Mining block3 ...");
-        blockChain.addBlock(block3);
-        System.out.println("Mining block4 ...");
-        blockChain.addBlock(block4);
-
-        System.out.println(blockChain.isChainValid());
-        block4.setIllnessRecords(null);
-        block4.setHash(block4.calculateHash());
-        System.out.println(blockChain.isChainValid());
-        System.out.println(JsonUtils.toJson(blockChain.getBlocks()));
-    }
-
-    private static List<IllnessRecordDTO> getRecordsList() {
-        IllnessRecordDTO illnessRecordDTO = new IllnessRecordDTO();
-        return Arrays.asList(new IllnessRecordDTO(), new IllnessRecordDTO(), new IllnessRecordDTO(), new IllnessRecordDTO());
-    }
 }
