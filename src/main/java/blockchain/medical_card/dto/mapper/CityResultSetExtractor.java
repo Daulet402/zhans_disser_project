@@ -1,6 +1,5 @@
 package blockchain.medical_card.dto.mapper;
 
-import blockchain.medical_card.dto.AddressDTO;
 import blockchain.medical_card.dto.HospitalDTO;
 import blockchain.medical_card.dto.info.CityDTO;
 import blockchain.medical_card.dto.info.DistrictDTO;
@@ -37,8 +36,6 @@ public class CityResultSetExtractor implements ResultSetExtractor {
 				cityDTO.getDistrictDTOList().add(districtDTO);
 			}
 
-			//AddressDTO addressDTO = new AddressDTO(cityDTO, districtDTO, rs.getString("address"));
-			//HospitalDTO hospitalDTO = new HospitalDTO(rs.getLong("hospital_id"), rs.getString("hospital_name"), districtId, addressDTO);
 			HospitalDTO hospitalDTO = new HospitalDTO(rs.getLong("hospital_id"), rs.getString("hospital_name"), districtId, rs.getString("address"));
 			districtDTO.getHospitalDTOList().add(hospitalDTO);
 		}

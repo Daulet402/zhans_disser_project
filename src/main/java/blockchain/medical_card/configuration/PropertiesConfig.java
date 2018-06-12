@@ -23,14 +23,11 @@ public class PropertiesConfig {
 	@Value("${app.data.files.temp_records.file}")
 	private String tempRecordsFileName;
 
-	//@Value("${error}")
 	private String errorMessage = "Ошибка";
 
-	//@Value("${doctor.exists}")
 	private String existsMessage = "Запись уже существует";
 	private String incorrectInputMessage = "Проверьте входные данные";
 
-	//@Value("${doctor.exists}")
 	private String doctorNotFoundMessage = "Не верные данные";
 
 	private String loggedInUsernameTextPattern = "Вы зашли под именем %s";

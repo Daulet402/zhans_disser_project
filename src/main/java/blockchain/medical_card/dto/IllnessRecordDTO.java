@@ -15,17 +15,16 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class IllnessRecordDTO implements Serializable {
-	private String id;
-	private String plan;
-	private String doctorId;
-	private String patientId;
-	private String diagnosis;
-	private String complaints;
-	private String illnessHistory;
-	private String inspectionType;
+    private String id;
+    private String plan;
+    private String doctorId;
+    private String patientId;
+    private String diagnosis;
+    private String complaints;
+    private String illnessHistory;
+    private String inspectionType;
 
-	@JsonSerialize(using = LocalDateTimeSerializer.class)
-	@JsonDeserialize(using = LocalDateTimeDeserializer.class)
-	private LocalDateTime visitTime;
-	// TODO: 05/30/2018 save in data who is receiver and who is sender
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+    private LocalDateTime visitTime;
 }
